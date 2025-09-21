@@ -1,0 +1,487 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ solution.title }} - Past Solutions{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8 text-center">
+                <div class="solution-breadcrumb mb-4">
+                    <a href="{% url 'services:past_solutions' %}" class="breadcrumb-link">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Past Solutions
+                    </a>
+                </div>
+                <h1 class="hero-title">{{ solution.title }}</h1>
+                <p class="hero-subtitle">{{ solution.short_description }}</p>
+                <div class="solution-meta-info">
+                    {% if solution.client_name %}
+                    <span class="meta-item">
+                        <i class="fas fa-building me-2"></i>{{ solution.client_name }}
+                    </span>
+                    {% endif %}
+                    {% if solution.project_duration %}
+                    <span class="meta-item">
+                        <i class="fas fa-clock me-2"></i>{{ solution.project_duration }}
+                    </span>
+                    {% endif %}
+                    <span class="meta-item">
+                        <i class="fas fa-calendar me-2"></i>Completed {{ solution.completion_date|date:"F Y" }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Solution Details -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <div class="solution-detail-content">
+                    <!-- Solution Image -->
+                    {% if solution.image %}
+                    <div class="solution-detail-image mb-5">
+                        <img src="{{ solution.image.url }}" alt="{{ solution.title }}" class="img-fluid rounded">
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Description -->
+                    <div class="solution-description mb-5">
+                        <h3>Project Overview</h3>
+                        <p>{{ solution.description|linebreaks }}</p>
+                    </div>
+                    
+                    <!-- Key Features -->
+                    {% if solution.features_list %}
+                    <div class="solution-features mb-5">
+                        <h3>Key Features</h3>
+                        <div class="features-grid">
+                            {% for feature in solution.features_list %}
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>{{ feature|safe }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Technologies Used -->
+                    {% if solution.technologies_list %}
+                    <div class="solution-technologies mb-5">
+                        <h3>Technologies Used</h3>
+                        <div class="technologies-grid">
+                            {% for tech in solution.technologies_list %}
+                            <span class="tech-badge">{{ tech|safe }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="solution-sidebar">
+                    <!-- Project Info Card -->
+                    <div class="sidebar-card">
+                        <h4>Project Information</h4>
+                        <div class="project-info">
+                            <div class="info-item">
+                                <span class="info-label">Category:</span>
+                                <span class="info-value">{{ solution.get_category_display }}</span>
+                            </div>
+                            {% if solution.client_name %}
+                            <div class="info-item">
+                                <span class="info-label">Client:</span>
+                                <span class="info-value">{{ solution.client_name }}</span>
+                            </div>
+                            {% endif %}
+                            {% if solution.project_duration %}
+                            <div class="info-item">
+                                <span class="info-label">Duration:</span>
+                                <span class="info-value">{{ solution.project_duration }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="info-item">
+                                <span class="info-label">Completed:</span>
+                                <span class="info-value">{{ solution.completion_date|date:"F d, Y" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- CTA Card -->
+                    <div class="sidebar-card cta-card">
+                        <h4>Interested in Similar Solutions?</h4>
+                        <p>Let's discuss how we can create a custom AI solution for your business needs.</p>
+                        <a href="{% url 'contact:contact' %}" class="btn btn-yellow btn-block">
+                            <i class="fas fa-envelope me-2"></i>Start Your Project
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Solutions -->
+{% if related_solutions %}
+<section class="section bg-light">
+    <div class="container">
+        <div class="section-title">
+            <h2>Related Solutions</h2>
+            <p class="section-subtitle">Explore more solutions in the same category</p>
+        </div>
+        
+        <div class="row">
+            {% for related in related_solutions %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="related-solution-card">
+                    <div class="related-image-container">
+                        {% if related.image %}
+                        <img src="{{ related.image.url }}" alt="{{ related.title }}" class="related-image">
+                        {% else %}
+                        <div class="related-placeholder">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        {% endif %}
+                        <div class="related-overlay">
+                            <span class="related-category">{{ related.get_category_display }}</span>
+                        </div>
+                    </div>
+                    <div class="related-content">
+                        <h5 class="related-title">{{ related.title }}</h5>
+                        <p class="related-description">{{ related.short_description|truncatewords:20 }}</p>
+                        <a href="{% url 'services:past_solution_detail' related.slug %}" class="btn btn-outline-primary btn-sm">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="section bg-gradient-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Start Your Project?</h2>
+        <p class="lead mb-4">
+            Let's discuss how we can create a custom AI solution for your business needs.
+        </p>
+        <a href="{% url 'contact:contact' %}" class="btn btn-yellow btn-lg">
+            <i class="fas fa-envelope me-2"></i>Contact Us Today
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Past Solution Detail Page Styling */
+
+.solution-breadcrumb {
+    text-align: left;
+}
+
+.breadcrumb-link {
+    color: var(--ai-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-fast);
+}
+
+.breadcrumb-link:hover {
+    color: var(--ai-secondary);
+    text-decoration: none;
+}
+
+.solution-meta-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    color: var(--ai-gray);
+    font-weight: 500;
+}
+
+.meta-item i {
+    color: var(--ai-secondary);
+}
+
+.solution-detail-content {
+    background: var(--ai-white);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.solution-detail-image img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.solution-description h3,
+.solution-features h3,
+.solution-technologies h3 {
+    color: var(--ai-primary);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.solution-description p {
+    color: var(--ai-gray);
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: var(--ai-light);
+    border-radius: 10px;
+    transition: var(--transition-fast);
+}
+
+.feature-item:hover {
+    background: var(--ai-accent);
+    transform: translateY(-2px);
+}
+
+.feature-item i {
+    color: var(--ai-success);
+    margin-right: 1rem;
+    font-size: 1.2rem;
+}
+
+.feature-item span {
+    color: var(--ai-primary);
+    font-weight: 500;
+}
+
+.technologies-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.tech-badge {
+    background: linear-gradient(135deg, var(--ai-secondary), var(--ai-accent));
+    color: var(--ai-white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--transition-fast);
+}
+
+.tech-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Sidebar */
+.solution-sidebar {
+    position: sticky;
+    top: 2rem;
+}
+
+.sidebar-card {
+    background: var(--ai-white);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.sidebar-card h4 {
+    color: var(--ai-primary);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+}
+
+.project-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--ai-light);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: var(--ai-gray);
+    font-weight: 500;
+}
+
+.info-value {
+    color: var(--ai-primary);
+    font-weight: 600;
+}
+
+.cta-card {
+    background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+    color: var(--ai-white);
+}
+
+.cta-card h4 {
+    color: var(--ai-white);
+}
+
+.cta-card p {
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 1.5rem;
+}
+
+.btn-block {
+    width: 100%;
+    padding: 12px 24px;
+    font-weight: 600;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+/* Related Solutions */
+.related-solution-card {
+    background: var(--ai-white);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.related-solution-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.related-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.related-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.related-solution-card:hover .related-image {
+    transform: scale(1.05);
+}
+
+.related-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ai-white);
+    font-size: 2.5rem;
+}
+
+.related-overlay {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+}
+
+.related-category {
+    background: var(--ai-accent);
+    color: var(--ai-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.related-content {
+    padding: 1.5rem;
+}
+
+.related-title {
+    color: var(--ai-primary);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    font-size: 1.2rem;
+}
+
+.related-description {
+    color: var(--ai-gray);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .solution-meta-info {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+    
+    .solution-detail-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .technologies-grid {
+        justify-content: center;
+    }
+    
+    .solution-sidebar {
+        position: static;
+        margin-top: 2rem;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
+</style>
+{% endblock %}

@@ -17,6 +17,13 @@ class Testimonial(models.Model):
     customer_name = models.CharField(max_length=100, help_text="Customer's name")
     company = models.CharField(max_length=100, help_text="Customer's company")
     job_title = models.CharField(max_length=100, blank=True, help_text="Customer's job title")
+    service = models.ForeignKey(
+        'services.Service', 
+        on_delete=models.CASCADE, 
+        null=True, 
+        blank=True,
+        help_text="Service being rated (optional)"
+    )
     rating = models.IntegerField(
         choices=RATING_CHOICES, 
         default=5,

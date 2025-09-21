@@ -5,12 +5,20 @@ from news.models import Article
 
 def home_view(request):
     """Home page view with featured content"""
+    from django.db import models
     
     # Get featured services
     featured_services = Service.objects.filter(
         is_featured=True, 
         is_active=True
     ).order_by('title')[:3]
+    
+    # Add rating information to each service
+    for service in featured_services:
+        testimonials = Testimonial.objects.filter(service=service, is_approved=True)
+        avg_rating = testimonials.aggregate(avg_rating=models.Avg('rating'))['avg_rating'] or 0
+        service.avg_rating = round(avg_rating, 1) if avg_rating else 0
+        service.total_ratings = testimonials.count()
     
     # Get featured testimonials
     featured_testimonials = Testimonial.objects.filter(

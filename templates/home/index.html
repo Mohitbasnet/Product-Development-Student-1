@@ -102,6 +102,23 @@
                     </div>
                     <div class="card-body text-center">
                         <h5 class="service-title">{{ service.title }}</h5>
+                        
+                        <!-- Service Rating -->
+                        {% if service.avg_rating > 0 %}
+                        <div class="service-rating-summary">
+                            <div class="rating-stars">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= service.avg_rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <span class="rating-text">{{ service.avg_rating|floatformat:1 }}/5 ({{ service.total_ratings }} review{{ service.total_ratings|pluralize }})</span>
+                        </div>
+                        {% endif %}
+                        
                         <p class="service-description">{{ service.short_description }}</p>
                         <ul class="service-features">
                             {% for feature in service.features_list %}
@@ -279,7 +296,7 @@
             Join the future of digital employee experience with our AI-powered solutions.
         </p>
         <div class="cta-buttons">
-            <a href="{% url 'contact:contact' %}" class="btn btn-light btn-lg me-3">
+            <a href="{% url 'contact:contact' %}" class="btn btn-yellow btn-lg me-3">
                 <i class="fas fa-envelope me-2"></i>
                 Get in Touch
             </a>
@@ -396,6 +413,10 @@
     display: flex;
     align-items: flex-start;
     gap: 1rem;
+    background: transparent;
+    padding: 0;
+    border: none;
+    box-shadow: none;
 }
 
 .feature-icon {
@@ -412,13 +433,28 @@
 }
 
 .feature-content h5 {
-    color: var(--ai-white);
+    color: var(--ai-white) !important;
     margin-bottom: 0.5rem;
+    font-weight: 600;
 }
 
 .feature-content p {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.9) !important;
     margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Ensure all text in Why Choose section is visible */
+.bg-gradient-primary h2,
+.bg-gradient-primary h3,
+.bg-gradient-primary h4,
+.bg-gradient-primary h5,
+.bg-gradient-primary h6,
+.bg-gradient-primary p,
+.bg-gradient-primary span,
+.bg-gradient-primary div {
+    color: var(--ai-white) !important;
 }
 
 /* AI Visualization Large */
@@ -473,6 +509,29 @@
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--ai-primary);
+}
+
+/* Service Rating Summary */
+.service-rating-summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 0.75rem 0;
+    padding: 0.5rem 1rem;
+    background: var(--ai-soft-bg);
+    border-radius: 20px;
+}
+
+.rating-stars {
+    color: var(--ai-accent);
+    font-size: 0.9rem;
+}
+
+.rating-text {
+    color: var(--ai-gray);
+    font-size: 0.85rem;
+    font-weight: 500;
 }
 
 /* Article Meta */

@@ -40,7 +40,7 @@ class ContactForm(forms.ModelForm):
             }),
             'job_details': forms.Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Please describe your project requirements and how we can help...',
+                'placeholder': 'Please describe your job requirements and how we can help...',
                 'rows': 5,
                 'required': True
             }),
@@ -52,7 +52,7 @@ class ContactForm(forms.ModelForm):
             'company': 'Company Name',
             'country': 'Country',
             'job_title': 'Job Title',
-            'job_details': 'Project Details',
+            'job_details': 'Job Details',
         }
     
     def __init__(self, *args, **kwargs):

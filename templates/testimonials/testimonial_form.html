@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Submit Review - AI-Solutions{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h1 class="hero-title">Rate Our Service</h1>
+                <p class="hero-subtitle">
+                    Share your experience and help others make informed decisions.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonial Form -->
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="testimonial-form-card">
+                    <div class="form-header">
+                        <h3 class="form-title">
+                            <i class="fas fa-star me-2"></i>Your Review
+                        </h3>
+                        <p class="form-subtitle">Help us improve by sharing your experience</p>
+                    </div>
+                    
+                    <form method="post" class="testimonial-form">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.customer_name.id_for_label }}" class="form-label">
+                                    {{ form.customer_name.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.customer_name }}
+                                {% if form.customer_name.errors %}
+                                    <div class="text-danger">{{ form.customer_name.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.company.id_for_label }}" class="form-label">
+                                    {{ form.company.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.company }}
+                                {% if form.company.errors %}
+                                    <div class="text-danger">{{ form.company.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.job_title.id_for_label }}" class="form-label">
+                                    {{ form.job_title.label }}
+                                </label>
+                                {{ form.job_title }}
+                                {% if form.job_title.errors %}
+                                    <div class="text-danger">{{ form.job_title.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.rating.id_for_label }}" class="form-label">
+                                    {{ form.rating.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.rating }}
+                                {% if form.rating.errors %}
+                                    <div class="text-danger">{{ form.rating.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="{{ form.content.id_for_label }}" class="form-label">
+                                {{ form.content.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.content }}
+                            {% if form.content.errors %}
+                                <div class="text-danger">{{ form.content.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Review
+                            </button>
+                            <a href="{% if service_id %}{% url 'services:service_detail' service_id %}{% else %}{% url 'testimonials:testimonials' %}{% endif %}" 
+                               class="btn btn-outline-secondary btn-lg ms-2">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.testimonial-form-card {
+    background: var(--ai-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 3rem;
+    margin-top: 2rem;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--ai-light);
+}
+
+.form-title {
+    color: var(--ai-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.form-subtitle {
+    color: var(--ai-gray);
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.testimonial-form .form-label {
+    font-weight: 600;
+    color: var(--ai-dark);
+    margin-bottom: 0.5rem;
+}
+
+.testimonial-form .form-control,
+.testimonial-form .form-select {
+    border: 2px solid var(--ai-light);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: var(--transition-normal);
+}
+
+.testimonial-form .form-control:focus,
+.testimonial-form .form-select:focus {
+    border-color: var(--ai-primary);
+    box-shadow: 0 0 0 0.2rem rgba(0, 88, 160, 0.25);
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--ai-light);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+    border: none;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: var(--transition-normal);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-outline-secondary {
+    border: 2px solid var(--ai-light);
+    color: var(--ai-gray);
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: var(--transition-normal);
+}
+
+.btn-outline-secondary:hover {
+    background: var(--ai-light);
+    border-color: var(--ai-gray);
+    color: var(--ai-dark);
+}
+
+@media (max-width: 768px) {
+    .testimonial-form-card {
+        padding: 2rem 1.5rem;
+        margin-top: 1rem;
+    }
+    
+    .form-title {
+        font-size: 1.5rem;
+    }
+    
+    .form-actions {
+        text-align: center;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .btn:last-child {
+        margin-bottom: 0;
+    }
+}
+</style>
+{% endblock %}

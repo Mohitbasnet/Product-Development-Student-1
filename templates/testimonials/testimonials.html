@@ -26,6 +26,13 @@
         <div class="testimonials-grid">
             {% for testimonial in testimonials %}
             <div class="testimonial-card">
+                <!-- Service Tag -->
+                {% if testimonial.service %}
+                <div class="service-tag">
+                    <i class="fas fa-cog me-1"></i>{{ testimonial.service.title }}
+                </div>
+                {% endif %}
+                
                 <div class="testimonial-header">
                     <div class="testimonial-rating">
                         {% for i in "12345" %}
@@ -127,6 +134,13 @@
                 {% if testimonial.is_featured %}
                 <div class="col-lg-6 mb-4">
                     <div class="featured-testimonial-card">
+                        <!-- Service Tag -->
+                        {% if testimonial.service %}
+                        <div class="service-tag">
+                            <i class="fas fa-cog me-1"></i>{{ testimonial.service.title }}
+                        </div>
+                        {% endif %}
+                        
                         <div class="testimonial-quote">
                             <i class="fas fa-quote-left"></i>
                         </div>
@@ -175,7 +189,7 @@
             Let's discuss how our AI solutions can transform your business and 
             enhance your digital employee experience.
         </p>
-        <a href="{% url 'contact:contact' %}" class="btn btn-light btn-lg">
+        <a href="{% url 'contact:contact' %}" class="btn btn-yellow btn-lg">
             <i class="fas fa-envelope me-2"></i>
             Get Started Today
         </a>
@@ -205,6 +219,22 @@
 .testimonial-card:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-xl);
+}
+
+/* Service Tag */
+.service-tag {
+    background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+    color: var(--ai-white);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 88, 160, 0.3);
 }
 
 .testimonial-header {
@@ -358,6 +388,22 @@
 .featured-testimonial-card:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-xl);
+}
+
+/* Service Tag for Featured Testimonials */
+.featured-testimonial-card .service-tag {
+    background: linear-gradient(135deg, var(--ai-accent), var(--ai-primary));
+    color: var(--ai-white);
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(0, 88, 160, 0.2);
 }
 
 .testimonial-quote {

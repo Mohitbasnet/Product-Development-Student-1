@@ -1,0 +1,639 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Past Solutions - AI-Solutions{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8 text-center">
+                <h1 class="hero-title">Our Past Solutions</h1>
+                <p class="hero-subtitle">
+                    Explore our portfolio of completed AI-powered solutions and successful projects 
+                    that have transformed businesses across various industries.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Solutions Filter -->
+<section class="section bg-gradient-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="filter-section">
+                    <h3 class="filter-title">Explore Our Portfolio</h3>
+                    <p class="filter-subtitle">Choose a category to discover our specialized AI solutions</p>
+                    <div class="solution-filters">
+                        <a href="{% url 'services:past_solutions' %}" class="filter-btn {% if not selected_category %}active{% endif %}">
+                            <i class="fas fa-th-large me-2"></i>All Solutions
+                        </a>
+                        <a href="{% url 'services:past_solutions' %}?category=ai_solutions" class="filter-btn {% if selected_category == 'ai_solutions' %}active{% endif %}">
+                            <i class="fas fa-robot me-2"></i>AI Solutions
+                        </a>
+                        <a href="{% url 'services:past_solutions' %}?category=fintech" class="filter-btn {% if selected_category == 'fintech' %}active{% endif %}">
+                            <i class="fas fa-chart-line me-2"></i>FinTech
+                        </a>
+                        <a href="{% url 'services:past_solutions' %}?category=iot" class="filter-btn {% if selected_category == 'iot' %}active{% endif %}">
+                            <i class="fas fa-microchip me-2"></i>IoT
+                        </a>
+                        <a href="{% url 'services:past_solutions' %}?category=safety" class="filter-btn {% if selected_category == 'safety' %}active{% endif %}">
+                            <i class="fas fa-shield-alt me-2"></i>Safety & Compliance
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Solutions Grid -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            {% for solution in solutions %}
+            <div class="col-lg-4 col-md-6 mb-5">
+                <div class="solution-card-wrapper">
+                    <div class="solution-card">
+                        <!-- Solution Image -->
+                        <div class="solution-image-container">
+                            {% if solution.image %}
+                            <img src="{{ solution.image.url }}" alt="{{ solution.title }}" class="solution-image">
+                            {% else %}
+                            <div class="solution-placeholder">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            {% endif %}
+                            <div class="solution-overlay">
+                                <div class="solution-category-badge">
+                                    <span class="badge">{{ solution.get_category_display }}</span>
+                                </div>
+                                {% if solution.is_featured %}
+                                <div class="featured-badge">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Solution Content -->
+                        <div class="solution-content">
+                            <div class="solution-header">
+                                <h4 class="solution-title">{{ solution.title }}</h4>
+                                <div class="solution-meta">
+                                    {% if solution.client_name %}
+                                    <span class="client-name">{{ solution.client_name }}</span>
+                                    {% endif %}
+                                    {% if solution.project_duration %}
+                                    <span class="project-duration">{{ solution.project_duration }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <p class="solution-description">{{ solution.short_description }}</p>
+                            
+                            <!-- Completion Date -->
+                            <div class="solution-completion">
+                                <i class="fas fa-calendar-alt me-2"></i>
+                                <span>Completed {{ solution.completion_date|date:"M Y" }}</span>
+                            </div>
+                            
+                            <!-- Solution Actions -->
+                            <div class="solution-actions">
+                                <a href="{% url 'services:past_solution_detail' solution.slug %}" class="btn btn-primary btn-block">
+                                    <i class="fas fa-arrow-right me-2"></i>View Project Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <div class="no-solutions">
+                    <i class="fas fa-project-diagram fa-3x text-muted mb-3"></i>
+                    <h4>No Solutions Found</h4>
+                    <p class="text-muted">No past solutions available in this category at the moment.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if solutions.has_other_pages %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <nav aria-label="Solutions pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if solutions.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    <i class="fas fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ solutions.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    <i class="fas fa-angle-left"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in solutions.paginator.page_range %}
+                            {% if solutions.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > solutions.number|add:'-3' and num < solutions.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if solutions.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ solutions.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    <i class="fas fa-angle-right"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ solutions.paginator.num_pages }}{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                
+                <!-- Pagination Info -->
+                <div class="text-center mt-3">
+                    <p class="text-muted">
+                        Showing {{ solutions.start_index }} to {{ solutions.end_index }} of {{ solutions.paginator.count }} solutions
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Success Stories Section -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="section-title">
+            <h2>Success Stories</h2>
+            <p class="section-subtitle">Real results from our AI-powered solutions</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="success-metric text-center">
+                    <div class="metric-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="metric-number">95%</h3>
+                    <p class="metric-label">Efficiency Improvement</p>
+                    <p class="metric-description">Average efficiency gain across all implemented solutions</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="success-metric text-center">
+                    <div class="metric-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="metric-number">50+</h3>
+                    <p class="metric-label">Happy Clients</p>
+                    <p class="metric-description">Organizations transformed by our AI solutions</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="success-metric text-center">
+                    <div class="metric-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="metric-number">24/7</h3>
+                    <p class="metric-label">Support Available</p>
+                    <p class="metric-description">Round-the-clock support for all deployed solutions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section bg-gradient-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Start Your Project?</h2>
+        <p class="lead mb-4">
+            Let's discuss how we can create a custom AI solution for your business needs.
+        </p>
+        <a href="{% url 'contact:contact' %}" class="btn btn-light btn-lg">
+            <i class="fas fa-envelope me-2"></i>
+            Start Your Project
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Past Solutions Page Styling */
+
+/* Filter Section */
+.bg-gradient-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.filter-section {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.filter-title {
+    color: var(--ai-primary);
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.filter-subtitle {
+    color: var(--ai-gray);
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+}
+
+.solution-filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.filter-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 24px;
+    background: var(--ai-white);
+    color: var(--ai-primary);
+    text-decoration: none;
+    border: 2px solid var(--ai-border);
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filter-btn:hover {
+    background: var(--ai-primary);
+    color: var(--ai-white);
+    border-color: var(--ai-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 88, 160, 0.3);
+}
+
+.filter-btn.active {
+    background: var(--ai-primary);
+    color: var(--ai-white);
+    border-color: var(--ai-primary);
+    box-shadow: 0 4px 15px rgba(0, 88, 160, 0.3);
+}
+
+/* Solution Cards */
+.solution-card-wrapper {
+    height: 100%;
+}
+
+.solution-card {
+    background: var(--ai-white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.solution-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.solution-image-container {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+
+.solution-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.solution-card:hover .solution-image {
+    transform: scale(1.05);
+}
+
+.solution-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ai-white);
+    font-size: 3rem;
+}
+
+.solution-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem;
+}
+
+.solution-category-badge .badge {
+    background: var(--ai-accent);
+    color: var(--ai-primary);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.featured-badge {
+    background: var(--ai-secondary);
+    color: var(--ai-white);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.solution-content {
+    padding: 2rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.solution-header {
+    margin-bottom: 1rem;
+}
+
+.solution-title {
+    color: var(--ai-primary);
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.solution-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.client-name {
+    color: var(--ai-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.project-duration {
+    color: var(--ai-gray);
+    font-size: 0.85rem;
+}
+
+.solution-description {
+    color: var(--ai-gray);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.solution-features {
+    margin-bottom: 1.5rem;
+}
+
+.features-title {
+    color: var(--ai-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.features-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    color: var(--ai-gray);
+    font-size: 0.9rem;
+}
+
+.features-list li i {
+    color: var(--ai-accent);
+    margin-right: 0.75rem;
+    font-size: 0.8rem;
+}
+
+.solution-technologies {
+    margin-bottom: 1.5rem;
+}
+
+.technologies-title {
+    color: var(--ai-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.technologies-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tech-tag {
+    background: var(--ai-light);
+    color: var(--ai-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.solution-actions {
+    margin-top: auto;
+}
+
+.btn-block {
+    width: 100%;
+    padding: 12px 24px;
+    font-weight: 600;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+/* No Solutions State */
+.no-solutions {
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.no-solutions i {
+    color: var(--ai-gray);
+    margin-bottom: 1.5rem;
+}
+
+.no-solutions h4 {
+    color: var(--ai-primary);
+    margin-bottom: 1rem;
+}
+
+/* Success Metrics */
+.success-metric {
+    background: var(--ai-white);
+    padding: 2.5rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.success-metric:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.metric-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--ai-secondary), var(--ai-accent));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+    color: var(--ai-white);
+}
+
+.metric-number {
+    color: var(--ai-primary);
+    font-weight: 700;
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.metric-label {
+    color: var(--ai-secondary);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.metric-description {
+    color: var(--ai-gray);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Pagination Styles */
+.pagination {
+    margin: 0;
+}
+
+.page-link {
+    color: var(--ai-primary);
+    background-color: var(--ai-white);
+    border: 2px solid var(--ai-border);
+    padding: 12px 16px;
+    margin: 0 4px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: var(--transition-fast);
+}
+
+.page-link:hover {
+    color: var(--ai-white);
+    background-color: var(--ai-secondary);
+    border-color: var(--ai-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.page-item.active .page-link {
+    color: var(--ai-white);
+    background-color: var(--ai-primary);
+    border-color: var(--ai-primary);
+    box-shadow: var(--shadow-md);
+}
+
+.page-item.disabled .page-link {
+    color: var(--ai-gray);
+    background-color: var(--ai-light);
+    border-color: var(--ai-border);
+    cursor: not-allowed;
+}
+
+.page-link i {
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .filter-title {
+        font-size: 2rem;
+    }
+    
+    .solution-filters {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .filter-btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
+    
+    .solution-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .technologies-tags {
+        justify-content: flex-start;
+    }
+}
+</style>
+{% endblock %}
