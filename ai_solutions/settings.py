@@ -1,22 +1,14 @@
-
 from pathlib import Path
 import os
 import environ
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 env = environ.Env(
     DEBUG=(bool, False)
 )
-
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
-SECRET_KEY = env('SECRET_KEY', default='django-insecure-85d0u^8nzi82d)tc%cv-g4@af9*a(*$4*#!d9nh)*2i7&sr7vh')
-
+SECRET_KEY = env('SECRET_KEY', default='django-insecure-85d0u^8nzi82d)tc%cv-g4@af9*a(*$4*')
 DEBUG = env('DEBUG', default=True)
-
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
-
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
@@ -38,7 +30,6 @@ INSTALLED_APPS = [
     'contact',
     'admin_dashboard',
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -49,9 +40,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 ROOT_URLCONF = 'ai_solutions.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -67,17 +56,13 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'ai_solutions.wsgi.application'
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -92,28 +77,19 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
-
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
-
 JAZZMIN_SETTINGS = {
     "site_title": "AI-Solutions Admin",
     "site_header": "AI-Solutions",
@@ -174,7 +150,6 @@ JAZZMIN_SETTINGS = {
     },
     "language_chooser": False,
 }
-
 JAZZMIN_UI_TWEAKS = {
     "navbar_small_text": False,
     "footer_small_text": False,
@@ -206,8 +181,4 @@ JAZZMIN_UI_TWEAKS = {
         "success": "btn-success"
     }
 }
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

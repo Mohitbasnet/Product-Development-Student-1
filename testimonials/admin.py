@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import Testimonial
-
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
     list_display = ['customer_name', 'company', 'service', 'rating', 'is_featured', 'is_approved', 'created_at']
@@ -8,7 +7,6 @@ class TestimonialAdmin(admin.ModelAdmin):
     search_fields = ['customer_name', 'company', 'content', 'service__title']
     list_editable = ['is_featured', 'is_approved']
     ordering = ['-created_at']
-    
     fieldsets = (
         ('Customer Information', {
             'fields': ('customer_name', 'company', 'job_title', 'image')
@@ -24,5 +22,4 @@ class TestimonialAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
     readonly_fields = ['created_at', 'updated_at']

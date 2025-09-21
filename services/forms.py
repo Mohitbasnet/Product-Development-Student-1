@@ -1,11 +1,8 @@
 from django import forms
 from .models import Service
 from testimonials.models import Testimonial
-
-
 class ServiceRatingForm(forms.ModelForm):
     """Form for rating a service"""
-    
     class Meta:
         model = Testimonial
         fields = ['customer_name', 'company', 'job_title', 'rating', 'content']
@@ -35,7 +32,6 @@ class ServiceRatingForm(forms.ModelForm):
                 'required': True
             })
         }
-    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['rating'].choices = Testimonial.RATING_CHOICES

@@ -1,9 +1,7 @@
 from django import forms
 from .models import Testimonial
-
 class TestimonialForm(forms.ModelForm):
     """Form for submitting testimonials with service rating"""
-    
     class Meta:
         model = Testimonial
         fields = ['customer_name', 'company', 'job_title', 'rating', 'content']
@@ -40,8 +38,6 @@ class TestimonialForm(forms.ModelForm):
             'rating': 'Rating',
             'content': 'Your Review',
         }
-    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Make job_title optional
         self.fields['job_title'].required = False

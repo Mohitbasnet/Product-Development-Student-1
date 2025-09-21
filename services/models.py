@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 import json
-
 class Service(models.Model):
     """
     Model to store company services and solutions.
@@ -17,7 +16,6 @@ class Service(models.Model):
         ('support', 'Support'),
         ('other', 'Other'),
     ]
-    
     title = models.CharField(max_length=200, help_text="Service title")
     slug = models.SlugField(max_length=200, unique=True, help_text="URL-friendly version of title")
     description = models.TextField(help_text="Service description")
@@ -56,15 +54,12 @@ class Service(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True, help_text="When the service was created")
     updated_at = models.DateTimeField(auto_now=True, help_text="When the service was last updated")
-    
     class Meta:
         verbose_name = "Service"
         verbose_name_plural = "Services"
         ordering = ['title']
-    
     def __str__(self):
         return f"{self.title} - {self.get_category_display()}"
-    
     @property
     def features_list(self):
         """Return features as a Python list"""
@@ -72,26 +67,21 @@ class Service(models.Model):
             return json.loads(self.features)
         except (json.JSONDecodeError, TypeError):
             return []
-    
     def set_features_list(self, features_list):
         """Set features from a Python list"""
         self.features = json.dumps(features_list)
-    
     @property
     def image_url(self):
         """Return the URL of the service image"""
         if self.image:
             return self.image.url
         return None
-    
     @property
     def formatted_price(self):
         """Return formatted price string"""
         if self.price_starting_from:
             return f"From {self.currency} {self.price_starting_from:,.2f}"
         return "Contact for pricing"
-
-
 class PastSolution(models.Model):
     """
     Model to store past solutions/portfolios that have been completed.
@@ -106,7 +96,6 @@ class PastSolution(models.Model):
         ('safety', 'Safety & Compliance'),
         ('other', 'Other'),
     ]
-    
     title = models.CharField(max_length=200, help_text="Solution title")
     slug = models.SlugField(max_length=200, unique=True, help_text="URL-friendly version of title")
     description = models.TextField(help_text="Detailed solution description")
@@ -150,15 +139,12 @@ class PastSolution(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True, help_text="When the solution was added")
     updated_at = models.DateTimeField(auto_now=True, help_text="When the solution was last updated")
-    
     class Meta:
         verbose_name = "Past Solution"
         verbose_name_plural = "Past Solutions"
         ordering = ['-completion_date']
-    
     def __str__(self):
         return f"{self.title} - {self.get_category_display()}"
-    
     @property
     def features_list(self):
         """Return features as a Python list"""
@@ -166,11 +152,9 @@ class PastSolution(models.Model):
             return json.loads(self.features)
         except (json.JSONDecodeError, TypeError):
             return []
-    
     def set_features_list(self, features_list):
         """Set features from a Python list"""
         self.features = json.dumps(features_list)
-    
     @property
     def technologies_list(self):
         """Return technologies as a Python list"""
@@ -178,11 +162,9 @@ class PastSolution(models.Model):
             return json.loads(self.technologies_used)
         except (json.JSONDecodeError, TypeError):
             return []
-    
     def set_technologies_list(self, technologies_list):
         """Set technologies from a Python list"""
         self.technologies_used = json.dumps(technologies_list)
-    
     @property
     def image_url(self):
         """Return the URL of the solution image"""

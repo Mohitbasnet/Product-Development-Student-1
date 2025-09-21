@@ -1,6 +1,5 @@
 {% extends "admin/base_site.html" %}
 {% load i18n admin_urls static log %}
-
 {% block content %}
 <div class="container-fluid px-3">
     <div class="row">
@@ -19,7 +18,6 @@
                     <a class="list-group-item" href="{% url 'admin:auth_user_add' %}">{% trans "Add User" %}</a>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-header"><strong>{% trans "Recent actions" %}</strong></div>
                 <div class="card-body p-0">
@@ -60,5 +58,3 @@
     </div>
 </div>
 {% endblock %}
-
-

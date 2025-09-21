@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-
 class Article(models.Model):
     """
     Model to store news/blog articles.
@@ -15,7 +14,6 @@ class Article(models.Model):
         ('announcements', 'Announcements'),
         ('other', 'Other'),
     ]
-    
     title = models.CharField(max_length=200, help_text="Article title")
     slug = models.SlugField(max_length=200, unique=True, help_text="URL-friendly version of title")
     content = models.TextField(help_text="Article content")
@@ -42,36 +40,30 @@ class Article(models.Model):
         blank=True, 
         help_text="Comma-separated tags for the article"
     )
-    
     class Meta:
         verbose_name = "Article"
         verbose_name_plural = "Articles"
         ordering = ['-published_date']
-    
     def __str__(self):
         return f"{self.title} - {self.author}"
-    
     @property
     def image_url(self):
         """Return the URL of the article image"""
         if self.image:
             return self.image.url
         return None
-    
     @property
     def tag_list(self):
         """Return tags as a list"""
         if self.tags:
             return [tag.strip() for tag in self.tags.split(',')]
         return []
-    
     @property
     def reading_time(self):
         """Estimate reading time in minutes"""
         words_per_minute = 200
         word_count = len(self.content.split())
         return max(1, round(word_count / words_per_minute))
-    
     def increment_view_count(self):
         """Increment the view count"""
         self.view_count += 1

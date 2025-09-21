@@ -2,17 +2,14 @@ from django.contrib import admin
 from django import forms
 from .models import Service, PastSolution
 from .widgets import FeaturesWidget
-
 class ServiceForm(forms.ModelForm):
     """Custom form for Service with enhanced features field"""
-    
     class Meta:
         model = Service
         fields = '__all__'
         widgets = {
             'features': FeaturesWidget(),
         }
-
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     form = ServiceForm
@@ -22,7 +19,6 @@ class ServiceAdmin(admin.ModelAdmin):
     list_editable = ['is_featured', 'is_active']
     ordering = ['title']
     prepopulated_fields = {'slug': ('title',)}
-    
     fieldsets = (
         ('Service Information', {
             'fields': ('title', 'slug', 'short_description', 'description', 'category', 'icon', 'image')
@@ -41,13 +37,9 @@ class ServiceAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
     readonly_fields = ['created_at', 'updated_at', 'formatted_price']
-
-
 class PastSolutionForm(forms.ModelForm):
     """Custom form for PastSolution with enhanced features and technologies fields"""
-    
     class Meta:
         model = PastSolution
         fields = '__all__'
@@ -55,7 +47,6 @@ class PastSolutionForm(forms.ModelForm):
             'features': FeaturesWidget(),
             'technologies_used': FeaturesWidget(),
         }
-
 @admin.register(PastSolution)
 class PastSolutionAdmin(admin.ModelAdmin):
     form = PastSolutionForm
@@ -65,7 +56,6 @@ class PastSolutionAdmin(admin.ModelAdmin):
     list_editable = ['is_featured', 'is_published']
     ordering = ['-completion_date']
     prepopulated_fields = {'slug': ('title',)}
-    
     fieldsets = (
         ('Solution Information', {
             'fields': ('title', 'slug', 'short_description', 'description', 'category', 'image')
@@ -84,5 +74,4 @@ class PastSolutionAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
     readonly_fields = ['created_at', 'updated_at']

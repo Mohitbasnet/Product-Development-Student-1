@@ -7,14 +7,10 @@ from news.models import Article
 from testimonials.models import Testimonial
 from services.models import Service
 import json
-
 class Command(BaseCommand):
     help = 'Create sample data for testing the AI-Solutions website'
-
     def handle(self, *args, **options):
         self.stdout.write('Creating sample data...')
-        
-        # Create sample contact inquiries
         contact_inquiries = [
             {
                 'name': 'John Smith',
@@ -48,14 +44,11 @@ class Command(BaseCommand):
                 'is_processed': False
             }
         ]
-        
         for inquiry_data in contact_inquiries:
             ContactInquiry.objects.get_or_create(
                 email=inquiry_data['email'],
                 defaults=inquiry_data
             )
-        
-        # Create sample services
         services = [
             {
                 'title': 'AI-Powered Virtual Assistant',
@@ -112,14 +105,11 @@ class Command(BaseCommand):
                 'price_starting_from': 399.99
             }
         ]
-        
         for service_data in services:
             Service.objects.get_or_create(
                 slug=service_data['slug'],
                 defaults=service_data
             )
-        
-        # Create sample testimonials
         testimonials = [
             {
                 'customer_name': 'David Wilson',
@@ -149,15 +139,12 @@ class Command(BaseCommand):
                 'is_approved': True
             }
         ]
-        
         for testimonial_data in testimonials:
             Testimonial.objects.get_or_create(
                 customer_name=testimonial_data['customer_name'],
                 company=testimonial_data['company'],
                 defaults=testimonial_data
             )
-        
-        # Create sample articles
         articles = [
             {
                 'title': 'The Future of AI in Digital Employee Experience',
@@ -184,14 +171,11 @@ class Command(BaseCommand):
                 'published_date': timezone.now()
             }
         ]
-        
         for article_data in articles:
             Article.objects.get_or_create(
                 slug=article_data['slug'],
                 defaults=article_data
             )
-        
-        # Create sample events
         events = [
             {
                 'title': 'AI Innovation Summit 2024',
@@ -215,14 +199,12 @@ class Command(BaseCommand):
                 'current_attendees': 95
             }
         ]
-        
         for event_data in events:
             Event.objects.get_or_create(
                 title=event_data['title'],
                 date=event_data['date'],
                 defaults=event_data
             )
-        
         self.stdout.write(
             self.style.SUCCESS('Successfully created sample data!')
         )

@@ -4,16 +4,12 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .models import ContactInquiry
 from .forms import ContactForm
-
 def contact_view(request):
     """Contact page view"""
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            # Save the inquiry
             inquiry = form.save()
-            
-            # Send email notification (optional)
             try:
                 send_mail(
                     'New Contact Inquiry - AI-Solutions',
@@ -23,14 +19,11 @@ def contact_view(request):
                     fail_silently=False,
                 )
             except Exception as e:
-                # Log error but don't fail the form submission
                 print(f"Email sending failed: {e}")
-            
             messages.success(request, 'Thank you for your inquiry! We will get back to you soon.')
             return redirect('contact:contact')
     else:
         form = ContactForm()
-    
     context = {
         'form': form,
         'page_title': 'Contact Us',

@@ -1,10 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block title %}{{ event.title }} - AI-Solutions{% endblock %}
-
 {% block content %}
-<!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
         <div class="row justify-content-center">
@@ -34,15 +31,11 @@
         </div>
     </div>
 </section>
-
-<!-- Event Detail Section -->
 <section class="section">
     <div class="container">
         <div class="row">
-            <!-- Event Content -->
             <div class="col-lg-8">
                 <div class="event-detail-card">
-                    <!-- Event Image -->
                     {% if event.image %}
                     <div class="event-image-container">
                         <img src="{{ event.image.url }}" alt="{{ event.title }}" class="event-image">
@@ -66,8 +59,6 @@
                         </div>
                     </div>
                     {% endif %}
-                    
-                    <!-- Event Description -->
                     <div class="event-content">
                         <div class="content-header">
                             <h2 class="content-title">Event Details</h2>
@@ -90,8 +81,6 @@
                             {{ event.description|linebreaks }}
                         </div>
                     </div>
-                    
-                    <!-- Event Information -->
                     <div class="event-info">
                         <div class="info-grid">
                             <div class="info-card">
@@ -104,7 +93,6 @@
                                     <small>{{ event.date|time:"g:i A" }}</small>
                                 </div>
                             </div>
-                            
                             <div class="info-card">
                                 <div class="info-icon">
                                     <i class="fas fa-map-marker-alt"></i>
@@ -114,7 +102,6 @@
                                     <p>{{ event.location }}</p>
                                 </div>
                             </div>
-                            
                             {% if event.max_attendees %}
                             <div class="info-card">
                                 <div class="info-icon">
@@ -129,7 +116,6 @@
                                 </div>
                             </div>
                             {% endif %}
-                            
                             <div class="info-card">
                                 <div class="info-icon">
                                     <i class="fas fa-tag"></i>
@@ -141,8 +127,6 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Registration Section -->
                     {% if event.is_upcoming and event.registration_url %}
                     <div class="registration-section">
                         <h3 class="registration-title">
@@ -176,10 +160,7 @@
                     {% endif %}
                 </div>
             </div>
-            
-            <!-- Event Sidebar -->
             <div class="col-lg-4">
-                <!-- Event Quick Info -->
                 <div class="event-quick-info card shadow-ai">
                     <div class="card-body">
                         <h4 class="card-title">Quick Info</h4>
@@ -215,8 +196,6 @@
                         </ul>
                     </div>
                 </div>
-                
-                <!-- Related Events -->
                 {% if related_events %}
                 <div class="related-events-card card shadow-ai mt-4">
                     <div class="card-body">
@@ -247,8 +226,6 @@
         </div>
     </div>
 </section>
-
-<!-- CTA Section -->
 <section class="section bg-gradient-primary text-white text-center">
     <div class="container">
         <h2 class="mb-4">Stay Updated with Our Events</h2>
@@ -264,11 +241,9 @@
     </div>
 </section>
 {% endblock %}
-
 {% block extra_css %}
 <style>
 /* Professional Event Detail Page Styling */
-
 /* Event Detail Card */
 .event-detail-card {
     background: var(--ai-white);
@@ -277,21 +252,18 @@
     box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     margin-bottom: 2rem;
 }
-
 /* Event Image Container */
 .event-image-container {
     position: relative;
     height: 400px;
     overflow: hidden;
 }
-
 .event-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
 }
-
 .image-overlay {
     position: absolute;
     top: 0;
@@ -304,13 +276,11 @@
     align-items: flex-start;
     padding: 2rem;
 }
-
 .event-badges {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
 }
-
 .type-badge {
     background: var(--ai-accent);
     color: var(--ai-primary);
@@ -321,7 +291,6 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-
 .featured-badge {
     background: var(--ai-secondary);
     color: var(--ai-white);
@@ -333,7 +302,6 @@
     align-items: center;
     gap: 0.5rem;
 }
-
 /* Event Placeholder */
 .event-placeholder-large {
     height: 400px;
@@ -344,48 +312,40 @@
     color: var(--ai-white);
     text-align: center;
 }
-
 .placeholder-content i {
     font-size: 4rem;
     margin-bottom: 1.5rem;
     opacity: 0.8;
 }
-
 .placeholder-content h3 {
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
 }
-
 .placeholder-content p {
     font-size: 1.1rem;
     opacity: 0.9;
 }
-
 /* Event Content */
 .event-content {
     padding: 3rem;
 }
-
 .content-header {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
     border-bottom: 2px solid var(--ai-border);
 }
-
 .content-title {
     color: var(--ai-primary);
     font-weight: 700;
     font-size: 2.2rem;
     margin-bottom: 1rem;
 }
-
 .event-meta {
     display: flex;
     gap: 2rem;
     flex-wrap: wrap;
 }
-
 .meta-item {
     display: flex;
     align-items: center;
@@ -394,32 +354,27 @@
     font-size: 0.95rem;
     font-weight: 500;
 }
-
 .meta-item i {
     color: var(--ai-accent);
     font-size: 0.9rem;
 }
-
 .event-description {
     color: var(--ai-dark);
     line-height: 1.8;
     font-size: 1.1rem;
     margin-bottom: 2rem;
 }
-
 /* Event Info Grid */
 .event-info {
     background: var(--ai-soft-bg);
     padding: 2.5rem;
     margin: 2rem 0;
 }
-
 .info-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 2rem;
 }
-
 .info-card {
     background: var(--ai-white);
     padding: 2rem;
@@ -430,12 +385,10 @@
     gap: 1.5rem;
     transition: transform 0.2s ease;
 }
-
 .info-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
-
 .info-icon {
     width: 60px;
     height: 60px;
@@ -448,25 +401,21 @@
     font-size: 1.5rem;
     flex-shrink: 0;
 }
-
 .info-content h4 {
     color: var(--ai-primary);
     font-weight: 700;
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
 }
-
 .info-content p {
     color: var(--ai-dark);
     font-weight: 600;
     margin-bottom: 0.25rem;
 }
-
 .info-content small {
     color: var(--ai-gray);
     font-size: 0.9rem;
 }
-
 .progress {
     height: 8px;
     background: var(--ai-light);
@@ -474,13 +423,11 @@
     overflow: hidden;
     margin-top: 0.5rem;
 }
-
 .progress-bar {
     background: linear-gradient(90deg, var(--ai-accent), var(--ai-secondary));
     height: 100%;
     transition: width 0.3s ease;
 }
-
 /* Registration Section */
 .registration-section {
     background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
@@ -490,7 +437,6 @@
     text-align: center;
     margin: 2rem 0;
 }
-
 .registration-title {
     font-size: 1.8rem;
     font-weight: 700;
@@ -499,24 +445,20 @@
     align-items: center;
     justify-content: center;
 }
-
 .registration-text {
     font-size: 1.1rem;
     margin-bottom: 2rem;
     opacity: 0.9;
 }
-
 .registration-actions {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
 }
-
 .registration-status {
     margin-top: 1rem;
 }
-
 .status-badge {
     padding: 0.5rem 1rem;
     border-radius: 20px;
@@ -525,17 +467,14 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-
 .status-badge.open-for-registration {
     background: var(--ai-accent);
     color: var(--ai-primary);
 }
-
 .status-badge.fully-booked {
     background: #dc3545;
     color: var(--ai-white);
 }
-
 /* Sidebar */
 .event-quick-info,
 .related-events-card {
@@ -545,12 +484,10 @@
     overflow: hidden;
     margin-bottom: 2rem;
 }
-
 .event-quick-info .card-body,
 .related-events-card .card-body {
     padding: 2rem;
 }
-
 .event-quick-info .card-title,
 .related-events-card .card-title {
     color: var(--ai-primary);
@@ -560,7 +497,6 @@
     padding-bottom: 1rem;
     border-bottom: 2px solid var(--ai-border);
 }
-
 .info-item {
     display: flex;
     justify-content: space-between;
@@ -568,58 +504,48 @@
     padding: 1rem 0;
     border-bottom: 1px dashed var(--ai-border);
 }
-
 .info-item:last-child {
     border-bottom: none;
 }
-
 .info-label {
     font-weight: 600;
     color: var(--ai-primary);
     font-size: 0.95rem;
 }
-
 .info-value {
     color: var(--ai-gray);
     font-weight: 500;
 }
-
 /* Related Events */
 .related-event-link {
     text-decoration: none;
     color: inherit;
     transition: all 0.3s ease;
 }
-
 .related-event-link:hover {
     color: var(--ai-secondary);
 }
-
 .related-event {
     padding: 1rem;
     border-radius: 10px;
     transition: all 0.3s ease;
 }
-
 .related-event-link:hover .related-event {
     background: var(--ai-soft-bg);
     transform: translateX(5px);
 }
-
 .related-event-title {
     color: var(--ai-primary);
     font-weight: 600;
     margin-bottom: 0.5rem;
     font-size: 1rem;
 }
-
 .related-event-date,
 .related-event-location {
     color: var(--ai-gray);
     font-size: 0.9rem;
     margin-bottom: 0.25rem;
 }
-
 /* Hero Badges */
 .hero-badges {
     margin-top: 1.5rem;
@@ -628,7 +554,6 @@
     justify-content: center;
     flex-wrap: wrap;
 }
-
 .badge-type {
     background: var(--ai-accent);
     color: var(--ai-primary);
@@ -639,7 +564,6 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-
 .badge-featured {
     background: var(--ai-secondary);
     color: var(--ai-white);
@@ -651,7 +575,6 @@
     align-items: center;
     gap: 0.5rem;
 }
-
 .badge-upcoming {
     background: #28a745;
     color: var(--ai-white);
@@ -663,7 +586,6 @@
     align-items: center;
     gap: 0.5rem;
 }
-
 .badge-past {
     background: var(--ai-gray);
     color: var(--ai-white);
@@ -675,42 +597,33 @@
     align-items: center;
     gap: 0.5rem;
 }
-
 /* Responsive Design */
 @media (max-width: 768px) {
     .event-content {
         padding: 2rem;
     }
-    
     .content-title {
         font-size: 1.8rem;
     }
-    
     .event-meta {
         flex-direction: column;
         gap: 1rem;
     }
-    
     .info-grid {
         grid-template-columns: 1fr;
     }
-    
     .event-image-container {
         height: 250px;
     }
-    
     .event-placeholder-large {
         height: 250px;
     }
-    
     .placeholder-content h3 {
         font-size: 1.5rem;
     }
-    
     .registration-actions {
         flex-direction: column;
     }
-    
     .info-card {
         flex-direction: column;
         text-align: center;

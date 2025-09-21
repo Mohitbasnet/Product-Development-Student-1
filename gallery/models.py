@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-
 class Photo(models.Model):
     """
     Model to store photos for the gallery page.
@@ -15,7 +14,6 @@ class Photo(models.Model):
         ('awards', 'Awards'),
         ('other', 'Other'),
     ]
-    
     title = models.CharField(max_length=200, help_text="Photo title")
     image = models.ImageField(upload_to='gallery/', blank=True, help_text="Photo file (optional)")
     description = models.TextField(blank=True, help_text="Photo description")
@@ -28,15 +26,12 @@ class Photo(models.Model):
     is_featured = models.BooleanField(default=False, help_text="Show in featured section")
     created_at = models.DateTimeField(auto_now_add=True, help_text="When the photo was uploaded")
     updated_at = models.DateTimeField(auto_now=True, help_text="When the photo was last updated")
-    
     class Meta:
         verbose_name = "Photo"
         verbose_name_plural = "Photos"
         ordering = ['-created_at']
-    
     def __str__(self):
         return f"{self.title} ({self.get_category_display()})"
-    
     @property
     def image_url(self):
         """Return the URL of the image"""

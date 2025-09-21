@@ -1,8 +1,6 @@
 {% extends "admin/base.html" %}
 {% load static %}
-
 {% block title %}{{ title }} | AI-Solutions Admin{% endblock %}
-
 {% block branding %}
 <h1 id="site-name">
     <a href="{% url 'admin:index' %}">
@@ -10,7 +8,6 @@
     </a>
 </h1>
 {% endblock %}
-
 {% block nav-global %}
 <div class="admin-links">
     <a href="{% url 'admin:index' %}" class="admin-link">
@@ -21,7 +18,6 @@
     </a>
 </div>
 {% endblock %}
-
 {% block extrahead %}
     {{ block.super }}
     <style>
@@ -37,13 +33,11 @@
             --ai-light: #f8f9fa;
             --ai-soft-bg: #f8f9fa;
         }
-        
         .admin-links {
             display: flex;
             gap: 15px;
             align-items: center;
         }
-        
         .admin-link {
             color: #fff;
             text-decoration: none;
@@ -52,32 +46,26 @@
             transition: background-color 0.3s ease;
             font-size: 14px;
         }
-        
         .admin-link:hover {
             background-color: rgba(255, 255, 255, 0.1);
             color: #fff;
             text-decoration: none;
         }
-        
         .admin-link i {
             margin-right: 5px;
         }
-        
         #site-name a {
             color: #fff;
             text-decoration: none;
             font-weight: 700;
         }
-        
         #site-name a:hover {
             color: #90cdf4;
         }
-        
         #site-name i {
             margin-right: 8px;
             color: #90cdf4;
         }
-        
         /* Enhanced breadcrumbs */
         .breadcrumbs {
             background: linear-gradient(135deg, #1a365d, #3182ce);
@@ -86,22 +74,18 @@
             border-radius: 5px;
             margin-bottom: 20px;
         }
-        
         .breadcrumbs a {
             color: #90cdf4;
             text-decoration: none;
         }
-        
         .breadcrumbs a:hover {
             color: white;
         }
-        
         /* Enhanced content wrapper */
         .content-wrapper {
             background: #f8fafc;
             min-height: calc(100vh - 60px);
         }
-        
         /* Custom button styles */
         .btn-primary {
             background: linear-gradient(135deg, #3182ce, #1a365d);
@@ -112,20 +96,17 @@
             font-weight: 500;
             transition: all 0.3s ease;
         }
-        
         .btn-primary:hover {
             background: linear-gradient(135deg, #1a365d, #3182ce);
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(49, 130, 206, 0.3);
         }
-        
         /* Enhanced table styles */
         .results table {
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
         .results table thead th {
             background: #1a365d;
             color: white;
@@ -134,22 +115,18 @@
             font-size: 0.85rem;
             letter-spacing: 0.5px;
         }
-        
         .results table tbody tr:hover {
             background-color: rgba(49, 130, 206, 0.05);
         }
-        
         /* Enhanced form styles */
         .form-row {
             margin-bottom: 15px;
         }
-        
         .form-row label {
             font-weight: 600;
             color: #2d3748;
             margin-bottom: 5px;
         }
-        
         .form-row input,
         .form-row textarea,
         .form-row select {
@@ -158,7 +135,6 @@
             padding: 10px;
             transition: all 0.3s ease;
         }
-        
         .form-row input:focus,
         .form-row textarea:focus,
         .form-row select:focus {
@@ -166,7 +142,6 @@
             box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
             outline: none;
         }
-        
         /* Enhanced card styles */
         .card {
             border: none;
@@ -174,7 +149,6 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
-        
         .card-header {
             background: linear-gradient(135deg, #90cdf4, white);
             border-bottom: 2px solid #e2e8f0;
@@ -182,13 +156,11 @@
             font-weight: 600;
             color: #1a365d;
         }
-        
         /* Loading states */
         .loading {
             opacity: 0.6;
             pointer-events: none;
         }
-        
         .loading::after {
             content: '';
             position: absolute;
@@ -202,19 +174,16 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
         /* Responsive design */
         @media (max-width: 768px) {
             .admin-links {
                 flex-direction: column;
                 gap: 5px;
             }
-            
             .admin-link {
                 font-size: 12px;
                 padding: 5px 8px;
@@ -222,10 +191,8 @@
         }
     </style>
 {% endblock %}
-
 {% block content %}
     {{ block.super }}
-    
     <script>
         // Add loading states to forms
         document.addEventListener('DOMContentLoaded', function() {
@@ -239,7 +206,6 @@
                     }
                 });
             });
-            
             // Add smooth scrolling
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {

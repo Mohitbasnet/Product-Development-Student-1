@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import Event
-
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     list_display = ['title', 'event_type', 'date', 'location', 'is_featured', 'registration_status']
@@ -9,7 +8,6 @@ class EventAdmin(admin.ModelAdmin):
     list_editable = ['is_featured']
     ordering = ['-date']
     date_hierarchy = 'date'
-    
     fieldsets = (
         ('Event Information', {
             'fields': ('title', 'description', 'date', 'location', 'image')
@@ -25,5 +23,4 @@ class EventAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
     readonly_fields = ['created_at', 'updated_at', 'registration_status']

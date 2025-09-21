@@ -1,10 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block title %}Contact Us - AI-Solutions{% endblock %}
-
 {% block content %}
-<!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
         <div class="row justify-content-center">
@@ -18,19 +15,15 @@
         </div>
     </div>
 </section>
-
-<!-- Contact Section -->
 <section class="section">
     <div class="container">
         <div class="row">
-            <!-- Contact Form -->
             <div class="col-lg-8">
                 <div class="contact-form-card">
                     <h3 class="form-title">Send us a Message</h3>
                     <p class="form-description">
                         Fill out the form below and we'll get back to you within 24 hours.
                     </p>
-                    
                     {% if messages %}
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {% for message in messages %}
@@ -39,7 +32,6 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                     {% endif %}
-                    
                     <form method="post" class="contact-form">
                         {% csrf_token %}
                         <div class="row">
@@ -70,7 +62,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -99,7 +90,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -128,7 +118,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="form-group">
                             <label for="{{ form.job_details.id_for_label }}" class="form-label">
                                 {{ form.job_details.label }} <span class="text-danger">*</span>
@@ -140,7 +129,6 @@
                             </div>
                             {% endif %}
                         </div>
-                        
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary btn-lg">
                                 <i class="fas fa-paper-plane me-2"></i>
@@ -150,8 +138,6 @@
                     </form>
                 </div>
             </div>
-            
-            <!-- Contact Information -->
             <div class="col-lg-4">
                 <div class="contact-info-card">
                     <h3 class="info-title">Get in Touch</h3>
@@ -159,7 +145,6 @@
                         We're here to help and answer any question you might have. 
                         We look forward to hearing from you.
                     </p>
-                    
                     <div class="contact-details">
                         <div class="contact-item">
                             <div class="contact-icon">
@@ -170,7 +155,6 @@
                                 <p>Sunderland, United Kingdom</p>
                             </div>
                         </div>
-                        
                         <div class="contact-item">
                             <div class="contact-icon">
                                 <i class="fas fa-phone"></i>
@@ -180,7 +164,6 @@
                                 <p>+44 191 123 4567</p>
                             </div>
                         </div>
-                        
                         <div class="contact-item">
                             <div class="contact-icon">
                                 <i class="fas fa-envelope"></i>
@@ -190,7 +173,6 @@
                                 <p>info@aisolutions.com</p>
                             </div>
                         </div>
-                        
                         <div class="contact-item">
                             <div class="contact-icon">
                                 <i class="fas fa-clock"></i>
@@ -202,7 +184,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="social-links">
                         <h5>Follow Us</h5>
                         <div class="social-buttons">
@@ -225,15 +206,12 @@
         </div>
     </div>
 </section>
-
-<!-- FAQ Section -->
 <section class="section bg-light">
     <div class="container">
         <div class="section-title">
             <h2>Frequently Asked Questions</h2>
             <p class="section-subtitle">Quick answers to common questions about our services</p>
         </div>
-        
         <div class="row">
             <div class="col-lg-8 mx-auto">
                 <div class="accordion" id="faqAccordion">
@@ -251,7 +229,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="faq2">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
@@ -266,7 +243,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="faq3">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
@@ -280,7 +256,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="faq4">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">
@@ -301,7 +276,6 @@
     </div>
 </section>
 {% endblock %}
-
 {% block extra_css %}
 <style>
 .contact-form-card {
@@ -311,27 +285,22 @@
     padding: 2rem;
     margin-bottom: 2rem;
 }
-
 .form-title {
     color: var(--ai-primary);
     margin-bottom: 0.5rem;
 }
-
 .form-description {
     color: var(--ai-gray);
     margin-bottom: 2rem;
 }
-
 .contact-form .form-group {
     margin-bottom: 1.5rem;
 }
-
 .contact-form .form-label {
     font-weight: 600;
     color: var(--ai-primary);
     margin-bottom: 0.5rem;
 }
-
 .contact-form .form-control {
     border: 2px solid var(--ai-light);
     border-radius: var(--radius-md);
@@ -339,13 +308,11 @@
     font-size: 1rem;
     transition: var(--transition-fast);
 }
-
 .contact-form .form-control:focus {
     border-color: var(--ai-secondary);
     box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
     outline: none;
 }
-
 .contact-info-card {
     background: var(--ai-white);
     border-radius: var(--radius-lg);
@@ -355,29 +322,24 @@
     position: sticky;
     top: 2rem;
 }
-
 .info-title {
     color: var(--ai-primary);
     margin-bottom: 1rem;
 }
-
 .info-description {
     color: var(--ai-gray);
     margin-bottom: 2rem;
     line-height: 1.6;
 }
-
 .contact-details {
     margin-bottom: 2rem;
 }
-
 .contact-item {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
-
 .contact-icon {
     width: 40px;
     height: 40px;
@@ -390,29 +352,24 @@
     font-size: 1.2rem;
     flex-shrink: 0;
 }
-
 .contact-content h5 {
     color: var(--ai-primary);
     margin: 0 0 0.25rem 0;
     font-size: 1rem;
 }
-
 .contact-content p {
     color: var(--ai-gray);
     margin: 0;
     font-size: 0.9rem;
 }
-
 .social-links h5 {
     color: var(--ai-primary);
     margin-bottom: 1rem;
 }
-
 .social-buttons {
     display: flex;
     gap: 0.5rem;
 }
-
 .social-btn {
     width: 40px;
     height: 40px;
@@ -425,13 +382,11 @@
     text-decoration: none;
     transition: var(--transition-fast);
 }
-
 .social-btn:hover {
     background: var(--ai-secondary);
     color: var(--ai-white);
     transform: translateY(-2px);
 }
-
 .accordion-item {
     border: none;
     margin-bottom: 1rem;
@@ -439,7 +394,6 @@
     overflow: hidden;
     box-shadow: var(--shadow-sm);
 }
-
 .accordion-button {
     background: var(--ai-white);
     border: none;
@@ -447,45 +401,37 @@
     font-weight: 600;
     padding: 1rem 1.5rem;
 }
-
 .accordion-button:not(.collapsed) {
     background: var(--ai-secondary);
     color: var(--ai-white);
     box-shadow: none;
 }
-
 .accordion-button:focus {
     box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
 }
-
 .accordion-body {
     background: var(--ai-white);
     color: var(--ai-gray);
     padding: 1.5rem;
     line-height: 1.6;
 }
-
 @media (max-width: 768px) {
     .contact-form-card,
     .contact-info-card {
         padding: 1.5rem;
     }
-    
     .contact-info-card {
         position: static;
         margin-top: 2rem;
     }
-    
     .contact-item {
         flex-direction: column;
         text-align: center;
         gap: 0.5rem;
     }
-    
     .social-buttons {
         justify-content: center;
     }
 }
 </style>
 {% endblock %}
-

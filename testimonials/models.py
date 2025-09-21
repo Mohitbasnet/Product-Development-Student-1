@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-
 class Testimonial(models.Model):
     """
     Model to store customer testimonials with ratings.
@@ -13,7 +12,6 @@ class Testimonial(models.Model):
         (4, '4 Stars'),
         (5, '5 Stars'),
     ]
-    
     customer_name = models.CharField(max_length=100, help_text="Customer's name")
     company = models.CharField(max_length=100, help_text="Customer's company")
     job_title = models.CharField(max_length=100, blank=True, help_text="Customer's job title")
@@ -39,27 +37,22 @@ class Testimonial(models.Model):
     is_approved = models.BooleanField(default=False, help_text="Whether testimonial is approved for display")
     created_at = models.DateTimeField(auto_now_add=True, help_text="When the testimonial was created")
     updated_at = models.DateTimeField(auto_now=True, help_text="When the testimonial was last updated")
-    
     class Meta:
         verbose_name = "Testimonial"
         verbose_name_plural = "Testimonials"
         ordering = ['-created_at']
-    
     def __str__(self):
         return f"{self.customer_name} - {self.company} ({self.rating} stars)"
-    
     @property
     def image_url(self):
         """Return the URL of the customer image"""
         if self.image:
             return self.image.url
         return None
-    
     @property
     def stars_display(self):
         """Return stars as HTML for display"""
         return "★" * self.rating + "☆" * (5 - self.rating)
-    
     @property
     def short_content(self):
         """Return truncated content for admin display"""

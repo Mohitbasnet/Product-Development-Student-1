@@ -2,16 +2,10 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 from datetime import date
 from services.models import PastSolution
-
-
 class Command(BaseCommand):
     help = 'Populate past solutions with sample data'
-
     def handle(self, *args, **options):
-        # Clear existing past solutions
         PastSolution.objects.all().delete()
-        
-        # Sample past solutions data
         solutions_data = [
             {
                 'title': 'DocuMind',
@@ -134,14 +128,11 @@ class Command(BaseCommand):
                 'is_published': True
             }
         ]
-
-        # Create past solutions
         for solution_data in solutions_data:
             solution = PastSolution.objects.create(**solution_data)
             self.stdout.write(
                 self.style.SUCCESS(f'Successfully created past solution: {solution.title}')
             )
-
         self.stdout.write(
             self.style.SUCCESS(f'Successfully populated {len(solutions_data)} past solutions')
         )

@@ -1,8 +1,6 @@
 {% extends "admin/base_site.html" %}
 {% load static %}
-
 {% block title %}Analytics Dashboard - AI-Solutions Admin{% endblock %}
-
 {% block extrahead %}
     {{ block.super }}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -21,17 +19,14 @@
             --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
             --shadow-hover: 0 15px 35px rgba(31, 38, 135, 0.2);
         }
-
         * {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
-
         .analytics-dashboard {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             padding: 2rem 0;
         }
-
         .dashboard-header {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
             backdrop-filter: blur(20px);
@@ -43,7 +38,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .dashboard-header::before {
             content: '';
             position: absolute;
@@ -54,7 +48,6 @@
             background: var(--primary-gradient);
             border-radius: 20px 20px 0 0;
         }
-
         .dashboard-title {
             font-size: 2.5rem;
             font-weight: 800;
@@ -65,14 +58,12 @@
             margin: 0;
             line-height: 1.2;
         }
-
         .dashboard-subtitle {
             color: #64748b;
             font-size: 1.1rem;
             font-weight: 500;
             margin: 0.5rem 0 0 0;
         }
-
         .realtime-badge {
             background: var(--success-gradient);
             color: white;
@@ -86,19 +77,16 @@
             box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
             animation: pulse-glow 2s infinite;
         }
-
         @keyframes pulse-glow {
             0%, 100% { box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4); }
             50% { box-shadow: 0 4px 25px rgba(79, 172, 254, 0.6); }
         }
-
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-
         .stat-card {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -111,7 +99,6 @@
             overflow: hidden;
             cursor: pointer;
         }
-
         .stat-card::before {
             content: '';
             position: absolute;
@@ -123,23 +110,19 @@
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
-
         .stat-card:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: var(--shadow-hover);
         }
-
         .stat-card:hover::before {
             transform: scaleX(1);
         }
-
         .stat-card.inquiries::before { background: var(--primary-gradient); }
         .stat-card.pending::before { background: var(--warning-gradient); }
         .stat-card.articles::before { background: var(--success-gradient); }
         .stat-card.events::before { background: var(--info-gradient); }
         .stat-card.testimonials::before { background: var(--secondary-gradient); }
         .stat-card.services::before { background: var(--dark-gradient); }
-
         .stat-icon {
             position: absolute;
             top: 1.5rem;
@@ -155,19 +138,16 @@
             opacity: 0.9;
             transition: all 0.3s ease;
         }
-
         .stat-card:hover .stat-icon {
             transform: scale(1.1) rotate(5deg);
             opacity: 1;
         }
-
         .stat-card.inquiries .stat-icon { background: var(--primary-gradient); }
         .stat-card.pending .stat-icon { background: var(--warning-gradient); }
         .stat-card.articles .stat-icon { background: var(--success-gradient); }
         .stat-card.events .stat-icon { background: var(--info-gradient); }
         .stat-card.testimonials .stat-icon { background: var(--secondary-gradient); }
         .stat-card.services .stat-icon { background: var(--dark-gradient); }
-
         .stat-number {
             font-size: 3.5rem;
             font-weight: 800;
@@ -179,11 +159,9 @@
             line-height: 1;
             transition: all 0.3s ease;
         }
-
         .stat-card:hover .stat-number {
             transform: scale(1.05);
         }
-
         .stat-label {
             color: #64748b;
             font-weight: 600;
@@ -193,11 +171,9 @@
             letter-spacing: 1px;
             transition: color 0.3s ease;
         }
-
         .stat-card:hover .stat-label {
             color: #475569;
         }
-
         .chart-container {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -210,7 +186,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .chart-container::before {
             content: '';
             position: absolute;
@@ -221,12 +196,10 @@
             background: var(--primary-gradient);
             border-radius: 20px 20px 0 0;
         }
-
         .chart-container:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-hover);
         }
-
         .section-title {
             font-size: 1.5rem;
             font-weight: 700;
@@ -242,7 +215,6 @@
             background-repeat: no-repeat;
             background-position: 0 100%;
         }
-
         .recent-activity {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -254,7 +226,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .recent-activity::before {
             content: '';
             position: absolute;
@@ -265,12 +236,10 @@
             background: var(--primary-gradient);
             border-radius: 20px 20px 0 0;
         }
-
         .recent-activity:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-hover);
         }
-
         .activity-item {
             display: flex;
             align-items: center;
@@ -280,19 +249,16 @@
             border-radius: 10px;
             margin-bottom: 0.5rem;
         }
-
         .activity-item:hover {
             background: rgba(255, 255, 255, 0.1);
             padding-left: 1rem;
             padding-right: 1rem;
             transform: translateX(5px);
         }
-
         .activity-item:last-child {
             border-bottom: none;
             margin-bottom: 0;
         }
-
         .activity-icon {
             width: 50px;
             height: 50px;
@@ -307,7 +273,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .activity-icon::before {
             content: '';
             position: absolute;
@@ -319,30 +284,24 @@
             opacity: 0.1;
             border-radius: 15px;
         }
-
         .activity-icon.inquiry {
             background: var(--primary-gradient);
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
-
         .activity-icon.article {
             background: var(--success-gradient);
             box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
         }
-
         .activity-icon.event {
             background: var(--info-gradient);
             box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4);
         }
-
         .activity-item:hover .activity-icon {
             transform: scale(1.1) rotate(5deg);
         }
-
         .activity-content {
             flex: 1;
         }
-
         .activity-title {
             font-weight: 600;
             color: #1e293b;
@@ -350,64 +309,52 @@
             font-size: 1rem;
             transition: color 0.3s ease;
         }
-
         .activity-item:hover .activity-title {
             color: #0f172a;
         }
-
         .activity-meta {
             color: #64748b;
             font-size: 0.85rem;
             margin: 0.25rem 0 0 0;
             font-weight: 500;
         }
-
         .loading-skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
             animation: loading 1.5s infinite;
         }
-
         @keyframes loading {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
-
         .fade-in {
             animation: fadeIn 0.6s ease-out;
         }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .slide-up {
             animation: slideUp 0.8s ease-out;
         }
-
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .bounce-in {
             animation: bounceIn 0.6s ease-out;
         }
-
         @keyframes bounceIn {
             0% { opacity: 0; transform: scale(0.3); }
             50% { opacity: 1; transform: scale(1.05); }
             70% { transform: scale(0.9); }
             100% { opacity: 1; transform: scale(1); }
         }
-
         .chart-wrapper {
             position: relative;
             height: 300px;
             margin-top: 1rem;
         }
-
         .chart-loading {
             position: absolute;
             top: 50%;
@@ -416,7 +363,6 @@
             color: #64748b;
             font-weight: 500;
         }
-
         .metric-trend {
             display: flex;
             align-items: center;
@@ -425,49 +371,40 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-
         .trend-up { color: #10b981; }
         .trend-down { color: #ef4444; }
         .trend-neutral { color: #64748b; }
-
         .glassmorphism {
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.18);
         }
-
         .gradient-text {
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .floating-animation {
             animation: floating 3s ease-in-out infinite;
         }
-
         @keyframes floating {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
         }
-
         .pulse-animation {
             animation: pulse 2s infinite;
         }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
         }
-
         .stats-grid .stat-card:nth-child(1) { animation-delay: 0.1s; }
         .stats-grid .stat-card:nth-child(2) { animation-delay: 0.2s; }
         .stats-grid .stat-card:nth-child(3) { animation-delay: 0.3s; }
         .stats-grid .stat-card:nth-child(4) { animation-delay: 0.4s; }
         .stats-grid .stat-card:nth-child(5) { animation-delay: 0.5s; }
         .stats-grid .stat-card:nth-child(6) { animation-delay: 0.6s; }
-
         @media (max-width: 768px) {
             .dashboard-title { font-size: 2rem; }
             .stats-grid { grid-template-columns: 1fr; }
@@ -476,7 +413,6 @@
         }
     </style>
 {% endblock %}
-
 {% block content %}
 <div class="analytics-dashboard">
     <div class="container-fluid">
@@ -497,7 +433,6 @@
                 </div>
             </div>
         </div>
-
         <div class="stats-grid">
             <div class="stat-card inquiries bounce-in">
                 <div class="stat-number" data-count="{{ total_inquiries }}">0</div>
@@ -510,7 +445,6 @@
                     <span>+12% from last month</span>
                 </div>
             </div>
-            
             <div class="stat-card pending bounce-in">
                 <div class="stat-number" data-count="{{ pending_inquiries }}">0</div>
                 <div class="stat-label">Pending Inquiries</div>
@@ -522,7 +456,6 @@
                     <span>No change</span>
                 </div>
             </div>
-            
             <div class="stat-card articles bounce-in">
                 <div class="stat-number" data-count="{{ published_articles }}">0</div>
                 <div class="stat-label">Published Articles</div>
@@ -534,7 +467,6 @@
                     <span>+8% from last month</span>
                 </div>
             </div>
-            
             <div class="stat-card events bounce-in">
                 <div class="stat-number" data-count="{{ upcoming_events }}">0</div>
                 <div class="stat-label">Upcoming Events</div>
@@ -546,7 +478,6 @@
                     <span>+3 new events</span>
                 </div>
             </div>
-            
             <div class="stat-card testimonials bounce-in">
                 <div class="stat-number" data-count="{{ approved_testimonials }}">0</div>
                 <div class="stat-label">Approved Testimonials</div>
@@ -558,7 +489,6 @@
                     <span>+5 this week</span>
                 </div>
             </div>
-            
             <div class="stat-card services bounce-in">
                 <div class="stat-number" data-count="{{ active_services }}">0</div>
                 <div class="stat-label">Active Services</div>
@@ -571,8 +501,6 @@
                 </div>
             </div>
         </div>
-
-
         <div class="row">
             <div class="col-lg-8">
                 <div class="chart-container slide-up">
@@ -593,7 +521,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-lg-4">
                 <div class="recent-activity slide-up">
@@ -616,7 +543,6 @@
                     {% endfor %}
                 </div>
             </div>
-            
             <div class="col-lg-4">
                 <div class="recent-activity slide-up">
                     <h3 class="section-title">📰 Recent Articles</h3>
@@ -638,7 +564,6 @@
                     {% endfor %}
                 </div>
             </div>
-            
             <div class="col-lg-4">
                 <div class="recent-activity slide-up">
                     <h3 class="section-title">📅 Recent Events</h3>
@@ -661,7 +586,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-lg-6">
                 <div class="chart-container slide-up">
@@ -672,7 +596,6 @@
                     </div>
                 </div>
             </div>
-            
             <div class="col-lg-6">
                 <div class="chart-container slide-up">
                     <h3 class="section-title">⚡ Service Performance</h3>
@@ -685,19 +608,16 @@
         </div>
     </div>
 </div>
-
 <script>
 // Professional Chart Configuration
 Chart.defaults.font.family = 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 Chart.defaults.color = '#64748b';
 Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.2)';
-
 // Animation and Counter Functions
 function animateCounter(element, target, duration = 2000) {
     const start = 0;
     const increment = target / (duration / 16);
     let current = start;
-    
     const timer = setInterval(() => {
         current += increment;
         if (current >= target) {
@@ -707,12 +627,10 @@ function animateCounter(element, target, duration = 2000) {
         element.textContent = Math.floor(current);
     }, 16);
 }
-
 function hideLoading(elementId) {
     const loading = document.getElementById(elementId);
     if (loading) loading.style.display = 'none';
 }
-
 // Initialize counters when page loads
 document.addEventListener('DOMContentLoaded', function() {
     // Animate stat counters
@@ -724,12 +642,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }, index * 200);
     });
 });
-
 // Monthly Inquiry Trends Chart
 setTimeout(() => {
     const inquiryCtx = document.getElementById('inquiryChart').getContext('2d');
     hideLoading('inquiryLoading');
-    
     new Chart(inquiryCtx, {
         type: 'line',
         data: {
@@ -781,12 +697,10 @@ setTimeout(() => {
         }
     });
 }, 500);
-
 // Country Distribution Chart
 setTimeout(() => {
     const countryCtx = document.getElementById('countryChart').getContext('2d');
     hideLoading('countryLoading');
-    
     new Chart(countryCtx, {
         type: 'doughnut',
         data: {
@@ -832,12 +746,10 @@ setTimeout(() => {
         }
     });
 }, 1000);
-
 // Article Categories Chart
 setTimeout(() => {
     const categoryCtx = document.getElementById('categoryChart').getContext('2d');
     hideLoading('categoryLoading');
-    
     new Chart(categoryCtx, {
         type: 'bar',
         data: {
@@ -882,12 +794,10 @@ setTimeout(() => {
         }
     });
 }, 1500);
-
 // Service Performance Chart
 setTimeout(() => {
     const serviceCtx = document.getElementById('serviceChart').getContext('2d');
     hideLoading('serviceLoading');
-    
     new Chart(serviceCtx, {
         type: 'radar',
         data: {
@@ -939,7 +849,6 @@ setTimeout(() => {
         }
     });
 }, 2000);
-
 // Real-time update simulation
 setInterval(() => {
     const lastUpdated = document.getElementById('last-updated');
@@ -955,13 +864,11 @@ setInterval(() => {
         });
     }
 }, 1000);
-
 // Add intersection observer for animations
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
 };
-
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -969,7 +876,6 @@ const observer = new IntersectionObserver((entries) => {
         }
     });
 }, observerOptions);
-
 // Observe all animated elements
 document.querySelectorAll('.slide-up, .bounce-in').forEach(el => {
     observer.observe(el);

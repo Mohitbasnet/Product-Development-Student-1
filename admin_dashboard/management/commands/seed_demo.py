@@ -3,27 +3,20 @@ from django.utils import timezone
 from datetime import timedelta
 from faker import Faker
 import random
-
 from contact.models import ContactInquiry
 from news.models import Article
 from events.models import Event
 from testimonials.models import Testimonial
 from services.models import Service
 from gallery.models import Photo
-
-
 class Command(BaseCommand):
     help = "Seed demo data across apps (images optional)."
-
     def add_arguments(self, parser):
         parser.add_argument("--count", type=int, default=10, help="Count per model where applicable")
-
     def handle(self, *args, **options):
         fake = Faker()
         count = options["count"]
         now = timezone.now()
-
-        # Services
         categories = [c for c, _ in Service.CATEGORY_CHOICES]
         icons = [
             "fas fa-robot", "fas fa-cogs", "fas fa-chart-line", "fas fa-brain",
@@ -46,8 +39,6 @@ class Command(BaseCommand):
                     "price_starting_from": random.choice([None, 499, 999, 1499]) or None,
                 }
             )
-
-        # Articles
         article_categories = [c for c, _ in Article.CATEGORY_CHOICES]
         for i in range(count):
             title = f"{fake.catch_phrase()}"
@@ -66,8 +57,6 @@ class Command(BaseCommand):
                     "tags": ", ".join(fake.words(nb=5)),
                 }
             )
-
-        # Events
         for i in range(count):
             dt = now + timedelta(days=random.randint(-60, 60))
             etype = "upcoming" if dt > now else "past"
@@ -82,8 +71,6 @@ class Command(BaseCommand):
                 max_attendees=random.choice([None, 50, 100, 200]),
                 current_attendees=random.randint(0, 50),
             )
-
-        # Testimonials
         for i in range(count):
             Testimonial.objects.create(
                 customer_name=fake.name(),
@@ -94,8 +81,6 @@ class Command(BaseCommand):
                 is_featured=random.choice([True, False]),
                 is_approved=random.choice([True, True, False]),
             )
-
-        # Gallery Photos (no image required)
         photo_categories = [c for c, _ in Photo.CATEGORY_CHOICES]
         for i in range(count):
             Photo.objects.create(
@@ -104,8 +89,6 @@ class Command(BaseCommand):
                 category=random.choice(photo_categories),
                 is_featured=random.choice([True, False]),
             )
-
-        # Contact Inquiries
         for i in range(count):
             ContactInquiry.objects.create(
                 name=fake.name(),
@@ -118,5 +101,4 @@ class Command(BaseCommand):
                 is_processed=random.choice([True, False]),
                 notes=fake.sentence(),
             )
-
         self.stdout.write(self.style.SUCCESS("Demo data seeded successfully."))
