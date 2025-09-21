@@ -1,0 +1,738 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Services - AI-Solutions{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8 text-center">
+                <h1 class="hero-title">Our AI-Powered Services</h1>
+                <p class="hero-subtitle">
+                    Discover our comprehensive range of AI solutions designed to transform 
+                    your digital employee experience.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Filter -->
+<section class="section bg-gradient-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="filter-section">
+                    <h3 class="filter-title">Explore Our Services</h3>
+                    <p class="filter-subtitle">Choose a category to discover specialized AI solutions</p>
+                    <div class="service-filters">
+                        <a href="{% url 'services:services' %}" class="filter-btn {% if not selected_category %}active{% endif %}">
+                            <i class="fas fa-th-large me-2"></i>All Services
+                        </a>
+                        <a href="{% url 'services:services' %}?category=ai_solutions" class="filter-btn {% if selected_category == 'ai_solutions' %}active{% endif %}">
+                            <i class="fas fa-robot me-2"></i>AI Solutions
+                        </a>
+                        <a href="{% url 'services:services' %}?category=automation" class="filter-btn {% if selected_category == 'automation' %}active{% endif %}">
+                            <i class="fas fa-cogs me-2"></i>Automation
+                        </a>
+                        <a href="{% url 'services:services' %}?category=data_analytics" class="filter-btn {% if selected_category == 'data_analytics' %}active{% endif %}">
+                            <i class="fas fa-chart-line me-2"></i>Data Analytics
+                        </a>
+                        <a href="{% url 'services:services' %}?category=machine_learning" class="filter-btn {% if selected_category == 'machine_learning' %}active{% endif %}">
+                            <i class="fas fa-brain me-2"></i>Machine Learning
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Grid -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            {% for service in services %}
+            <div class="col-lg-4 col-md-6 mb-5">
+                <div class="service-card-wrapper">
+                    <div class="service-card">
+                        <!-- Service Image -->
+                        <div class="service-image-container">
+                            {% if service.image %}
+                            <img src="{{ service.image.url }}" alt="{{ service.title }}" class="service-image">
+                            {% else %}
+                            <div class="service-placeholder">
+                                <i class="{{ service.icon|default:'fas fa-cogs' }}"></i>
+                            </div>
+                            {% endif %}
+                            <div class="service-overlay">
+                                <div class="service-category-badge">
+                                    <span class="badge">{{ service.get_category_display }}</span>
+                                </div>
+                                {% if service.is_featured %}
+                                <div class="featured-badge">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Service Content -->
+                        <div class="service-content">
+                            <div class="service-header">
+                                <h4 class="service-title">{{ service.title }}</h4>
+                                <div class="service-price">
+                                    <span class="price">{{ service.formatted_price }}</span>
+                                </div>
+                            </div>
+                            
+                            <p class="service-description">{{ service.short_description }}</p>
+                            
+                            <!-- Key Features -->
+                            <div class="service-features">
+                                <h6 class="features-title">Key Features:</h6>
+                                <ul class="features-list">
+                                    {% for feature in service.features_list|slice:":3" %}
+                                    <li>
+                                        <i class="fas fa-check-circle"></i>
+                                        {{ feature }}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            
+                            <!-- Service Actions -->
+                            <div class="service-actions">
+                                <a href="{% url 'services:service_detail' service.slug %}" class="btn btn-primary btn-block">
+                                    <i class="fas fa-arrow-right me-2"></i>Learn More
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <div class="no-services">
+                    <i class="fas fa-cogs fa-3x text-muted mb-3"></i>
+                    <h4>No Services Found</h4>
+                    <p class="text-muted">No services available in this category at the moment.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if services.has_other_pages %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <nav aria-label="Services pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if services.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    <i class="fas fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ services.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    <i class="fas fa-angle-left"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in services.paginator.page_range %}
+                            {% if services.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > services.number|add:'-3' and num < services.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if services.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ services.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    <i class="fas fa-angle-right"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ services.paginator.num_pages }}{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                
+                <!-- Pagination Info -->
+                <div class="text-center mt-3">
+                    <p class="text-muted">
+                        Showing {{ services.start_index }} to {{ services.end_index }} of {{ services.paginator.count }} services
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Process Section -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Process</h2>
+            <p class="section-subtitle">How we deliver exceptional AI solutions</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="process-step text-center">
+                    <div class="step-number">1</div>
+                    <h5>Discovery</h5>
+                    <p>We analyze your requirements and understand your business challenges.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="process-step text-center">
+                    <div class="step-number">2</div>
+                    <h5>Design</h5>
+                    <p>We create a tailored AI solution architecture that meets your needs.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="process-step text-center">
+                    <div class="step-number">3</div>
+                    <h5>Development</h5>
+                    <p>Our team builds and tests the solution using cutting-edge AI technologies.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="process-step text-center">
+                    <div class="step-number">4</div>
+                    <h5>Deployment</h5>
+                    <p>We deploy the solution and provide ongoing support and optimization.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section bg-gradient-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Get Started?</h2>
+        <p class="lead mb-4">
+            Let's discuss your project and find the perfect AI solution for your needs.
+        </p>
+        <a href="{% url 'contact:contact' %}" class="btn btn-light btn-lg">
+            <i class="fas fa-envelope me-2"></i>
+            Contact Us Today
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Professional Services Page Styling */
+
+/* Filter Section */
+.bg-gradient-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.filter-section {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.filter-title {
+    color: var(--ai-primary);
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.filter-subtitle {
+    color: var(--ai-gray);
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+}
+
+.service-filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.filter-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 24px;
+    background: var(--ai-white);
+    color: var(--ai-primary);
+    text-decoration: none;
+    border: 2px solid var(--ai-border);
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filter-btn:hover {
+    background: var(--ai-primary);
+    color: var(--ai-white);
+    border-color: var(--ai-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 88, 160, 0.3);
+}
+
+.filter-btn.active {
+    background: var(--ai-primary);
+    color: var(--ai-white);
+    border-color: var(--ai-primary);
+    box-shadow: 0 4px 15px rgba(0, 88, 160, 0.3);
+}
+
+/* Service Cards */
+.service-card-wrapper {
+    height: 100%;
+}
+
+.service-card {
+    background: var(--ai-white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.service-image-container {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+
+.service-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover .service-image {
+    transform: scale(1.05);
+}
+
+.service-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ai-white);
+    font-size: 3rem;
+}
+
+.service-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem;
+}
+
+.service-category-badge .badge {
+    background: var(--ai-accent);
+    color: var(--ai-primary);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.featured-badge {
+    background: var(--ai-secondary);
+    color: var(--ai-white);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.service-content {
+    padding: 2rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.service-title {
+    color: var(--ai-primary);
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin: 0;
+    flex-grow: 1;
+    margin-right: 1rem;
+}
+
+.service-price {
+    text-align: right;
+}
+
+.service-price .price {
+    color: var(--ai-secondary);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.service-description {
+    color: var(--ai-gray);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.service-features {
+    margin-bottom: 2rem;
+}
+
+.features-title {
+    color: var(--ai-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.features-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    color: var(--ai-gray);
+    font-size: 0.9rem;
+}
+
+.features-list li i {
+    color: var(--ai-accent);
+    margin-right: 0.75rem;
+    font-size: 0.8rem;
+}
+
+.service-actions {
+    margin-top: auto;
+}
+
+.btn-block {
+    width: 100%;
+    padding: 12px 24px;
+    font-weight: 600;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+/* No Services State */
+.no-services {
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.no-services i {
+    color: var(--ai-gray);
+    margin-bottom: 1.5rem;
+}
+
+.no-services h4 {
+    color: var(--ai-primary);
+    margin-bottom: 1rem;
+}
+
+/* Pagination Styles */
+.pagination {
+    margin: 0;
+}
+
+.page-link {
+    color: var(--ai-primary);
+    background-color: var(--ai-white);
+    border: 2px solid var(--ai-border);
+    padding: 12px 16px;
+    margin: 0 4px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: var(--transition-fast);
+}
+
+.page-link:hover {
+    color: var(--ai-white);
+    background-color: var(--ai-secondary);
+    border-color: var(--ai-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.page-item.active .page-link {
+    color: var(--ai-white);
+    background-color: var(--ai-primary);
+    border-color: var(--ai-primary);
+    box-shadow: var(--shadow-md);
+}
+
+.page-item.disabled .page-link {
+    color: var(--ai-gray);
+    background-color: var(--ai-light);
+    border-color: var(--ai-border);
+    cursor: not-allowed;
+}
+
+.page-link i {
+    font-size: 0.9rem;
+}
+
+.pagination-info {
+    color: var(--ai-gray);
+    font-size: 0.95rem;
+    margin-top: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .filter-title {
+        font-size: 2rem;
+    }
+    
+    .service-filters {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .filter-btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
+    
+    .service-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .service-price {
+        text-align: left;
+        margin-top: 0.5rem;
+    }
+}
+.service-filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filter-btn {
+    padding: 10px 20px;
+    background: var(--ai-white);
+    color: var(--ai-primary);
+    border: 2px solid var(--ai-light);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition-fast);
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--ai-secondary);
+    color: var(--ai-white);
+    border-color: var(--ai-secondary);
+    text-decoration: none;
+}
+
+.service-card {
+    transition: var(--transition-normal);
+    border: none;
+    box-shadow: var(--shadow-md);
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-xl);
+}
+
+.service-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.service-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--ai-secondary), var(--ai-accent));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--ai-white);
+}
+
+.service-category .badge {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.8rem;
+}
+
+.service-title {
+    color: var(--ai-primary);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.service-description {
+    color: var(--ai-gray);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.service-features {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+
+.service-features li {
+    padding: 0.25rem 0;
+    color: var(--ai-gray);
+    position: relative;
+    padding-left: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.service-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--ai-success);
+    font-weight: bold;
+}
+
+.service-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--ai-light);
+}
+
+.service-price .price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ai-primary);
+}
+
+.no-services {
+    padding: 3rem 1rem;
+}
+
+.process-step {
+    background: var(--ai-white);
+    padding: 2rem 1.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    height: 100%;
+}
+
+.process-step:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--ai-secondary), var(--ai-accent));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ai-white);
+    margin: 0 auto 1.5rem;
+}
+
+.process-step h5 {
+    color: var(--ai-primary);
+    margin-bottom: 1rem;
+}
+
+.process-step p {
+    color: var(--ai-gray);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .service-filters {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .filter-btn {
+        width: 200px;
+        text-align: center;
+    }
+    
+    .service-footer {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+}
+</style>
+{% endblock %}

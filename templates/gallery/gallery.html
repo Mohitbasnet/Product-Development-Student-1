@@ -1,0 +1,419 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gallery - AI-Solutions{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8 text-center">
+                <h1 class="hero-title">Our Gallery</h1>
+                <p class="hero-subtitle">
+                    Explore our collection of photos showcasing our work, events, and team.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Filter -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8 text-center">
+                <h3 class="section-title mb-4">Filter by Category</h3>
+                <div class="gallery-filters">
+                    <a href="{% url 'gallery:gallery' %}" class="filter-btn {% if not selected_category %}active{% endif %}">
+                        All Photos
+                    </a>
+                    {% for category_value, category_label in categories %}
+                    <a href="{% url 'gallery:gallery' %}?category={{ category_value }}" class="filter-btn {% if selected_category == category_value %}active{% endif %}">
+                        {{ category_label }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Grid -->
+<section class="section">
+    <div class="container">
+        {% if photos %}
+        <div class="gallery-grid">
+            {% for photo in photos %}
+            <div class="gallery-item" data-category="{{ photo.category }}">
+                {% if photo.image %}
+                <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
+                {% else %}
+                <div class="placeholder-image">
+                    <i class="fas fa-image fa-3x"></i>
+                </div>
+                {% endif %}
+                <div class="gallery-overlay">
+                    <div class="gallery-content">
+                        <h5 class="gallery-title">{{ photo.title }}</h5>
+                        {% if photo.description %}
+                        <p class="gallery-description">{{ photo.description|truncatewords:15 }}</p>
+                        {% endif %}
+                        <div class="gallery-meta">
+                            <span class="gallery-category">{{ photo.get_category_display }}</span>
+                            {% if photo.is_featured %}
+                            <span class="gallery-featured">
+                                <i class="fas fa-star"></i> Featured
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-photos text-center">
+            <i class="fas fa-images fa-3x text-muted mb-3"></i>
+            <h4>No Photos Found</h4>
+            <p class="text-muted">No photos available in this category at the moment.</p>
+        </div>
+        {% endif %}
+        
+        <!-- Pagination -->
+        {% if photos.has_other_pages %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <nav aria-label="Gallery pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if photos.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    <i class="fas fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ photos.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    <i class="fas fa-angle-left"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in photos.paginator.page_range %}
+                            {% if photos.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > photos.number|add:'-3' and num < photos.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if photos.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ photos.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    <i class="fas fa-angle-right"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ photos.paginator.num_pages }}{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                
+                <!-- Pagination Info -->
+                <div class="text-center mt-3">
+                    <p class="text-muted">
+                        Showing {{ photos.start_index }} to {{ photos.end_index }} of {{ photos.paginator.count }} photos
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="{{ photos|length }}">0</div>
+                    <div class="stat-label">Total Photos</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="{{ photos|length }}">0</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="{{ photos|length }}">0</div>
+                    <div class="stat-label">Featured Photos</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="{{ photos|length }}">0</div>
+                    <div class="stat-label">Events Captured</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Pagination Styles */
+.pagination {
+    margin: 0;
+}
+
+.page-link {
+    color: var(--ai-primary);
+    background-color: var(--ai-white);
+    border: 2px solid var(--ai-border);
+    padding: 12px 16px;
+    margin: 0 4px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: var(--transition-fast);
+}
+
+.page-link:hover {
+    color: var(--ai-white);
+    background-color: var(--ai-secondary);
+    border-color: var(--ai-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.page-item.active .page-link {
+    color: var(--ai-white);
+    background-color: var(--ai-primary);
+    border-color: var(--ai-primary);
+    box-shadow: var(--shadow-md);
+}
+
+.page-item.disabled .page-link {
+    color: var(--ai-gray);
+    background-color: var(--ai-light);
+    border-color: var(--ai-border);
+    cursor: not-allowed;
+}
+
+.page-link i {
+    font-size: 0.9rem;
+}
+
+.pagination-info {
+    color: var(--ai-gray);
+    font-size: 0.95rem;
+    margin-top: 1rem;
+}
+.section-title {
+    color: var(--ai-primary);
+    font-weight: 700;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.gallery-filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.filter-btn {
+    padding: 12px 24px;
+    background: var(--ai-white);
+    color: var(--ai-primary);
+    border: 2px solid var(--ai-light);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: var(--transition-fast);
+    text-align: center;
+    min-width: 120px;
+    display: inline-block;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--ai-secondary);
+    color: var(--ai-white);
+    border-color: var(--ai-secondary);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 88, 160, 0.2);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    cursor: pointer;
+    background: var(--ai-white);
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-xl);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: var(--transition-normal);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+.placeholder-image {
+    width: 100%;
+    height: 250px;
+    background: var(--ai-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ai-gray);
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(26, 54, 93, 0.8), rgba(49, 130, 206, 0.8));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition-normal);
+    padding: 1rem;
+}
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.gallery-content {
+    text-align: center;
+    color: var(--ai-white);
+}
+
+.gallery-title {
+    color: var(--ai-white);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.gallery-description {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.gallery-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.gallery-category,
+.gallery-featured {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.gallery-featured {
+    color: var(--ai-warning);
+}
+
+.no-photos {
+    padding: 3rem 1rem;
+}
+
+.stat-card {
+    background: var(--ai-white);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    border-left: 4px solid var(--ai-secondary);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--ai-primary);
+    margin: 0;
+}
+
+.stat-label {
+    color: var(--ai-gray);
+    font-weight: 500;
+    margin: 0;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+    .gallery-filters {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .filter-btn {
+        width: 200px;
+        text-align: center;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .gallery-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+</style>
+{% endblock %}
+

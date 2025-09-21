@@ -1,0 +1,720 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ event.title }} - AI-Solutions{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8 text-center">
+                <h1 class="hero-title">{{ event.title }}</h1>
+                <p class="hero-subtitle">
+                    {{ event.description|truncatewords:20 }}
+                </p>
+                <div class="hero-badges">
+                    <span class="badge badge-type">{{ event.get_event_type_display }}</span>
+                    {% if event.is_featured %}
+                    <span class="badge badge-featured">
+                        <i class="fas fa-star"></i> Featured
+                    </span>
+                    {% endif %}
+                    {% if event.is_upcoming %}
+                    <span class="badge badge-upcoming">
+                        <i class="fas fa-calendar"></i> Upcoming
+                    </span>
+                    {% else %}
+                    <span class="badge badge-past">
+                        <i class="fas fa-history"></i> Past Event
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Event Detail Section -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Event Content -->
+            <div class="col-lg-8">
+                <div class="event-detail-card">
+                    <!-- Event Image -->
+                    {% if event.image %}
+                    <div class="event-image-container">
+                        <img src="{{ event.image.url }}" alt="{{ event.title }}" class="event-image">
+                        <div class="image-overlay">
+                            <div class="event-badges">
+                                <span class="type-badge">{{ event.get_event_type_display }}</span>
+                                {% if event.is_featured %}
+                                <span class="featured-badge">
+                                    <i class="fas fa-star"></i> Featured
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="event-placeholder-large">
+                        <div class="placeholder-content">
+                            <i class="fas fa-calendar-alt"></i>
+                            <h3>{{ event.title }}</h3>
+                            <p>{{ event.get_event_type_display }} Event</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Event Description -->
+                    <div class="event-content">
+                        <div class="content-header">
+                            <h2 class="content-title">Event Details</h2>
+                            <div class="event-meta">
+                                <span class="meta-item">
+                                    <i class="fas fa-calendar"></i>
+                                    {{ event.date|date:"M d, Y" }}
+                                </span>
+                                <span class="meta-item">
+                                    <i class="fas fa-clock"></i>
+                                    {{ event.date|time:"g:i A" }}
+                                </span>
+                                <span class="meta-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    {{ event.location }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="event-description">
+                            {{ event.description|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <!-- Event Information -->
+                    <div class="event-info">
+                        <div class="info-grid">
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="info-content">
+                                    <h4>Event Date</h4>
+                                    <p>{{ event.date|date:"F d, Y" }}</p>
+                                    <small>{{ event.date|time:"g:i A" }}</small>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="info-content">
+                                    <h4>Location</h4>
+                                    <p>{{ event.location }}</p>
+                                </div>
+                            </div>
+                            
+                            {% if event.max_attendees %}
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="info-content">
+                                    <h4>Capacity</h4>
+                                    <p>{{ event.current_attendees }}/{{ event.max_attendees }} Registered</p>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: {% widthratio event.current_attendees event.max_attendees 100 %}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                                <div class="info-content">
+                                    <h4>Event Type</h4>
+                                    <p>{{ event.get_event_type_display }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Registration Section -->
+                    {% if event.is_upcoming and event.registration_url %}
+                    <div class="registration-section">
+                        <h3 class="registration-title">
+                            <i class="fas fa-ticket-alt me-2"></i>Registration
+                        </h3>
+                        <div class="registration-content">
+                            <p class="registration-text">
+                                {% if event.max_attendees and event.current_attendees >= event.max_attendees %}
+                                    This event is fully booked. Join our waitlist to be notified of any cancellations.
+                                {% else %}
+                                    Secure your spot at this exciting event. Limited seats available!
+                                {% endif %}
+                            </p>
+                            <div class="registration-actions">
+                                <a href="{{ event.registration_url }}" class="btn btn-primary btn-lg" target="_blank">
+                                    <i class="fas fa-external-link-alt me-2"></i>
+                                    {% if event.max_attendees and event.current_attendees >= event.max_attendees %}
+                                        Join Waitlist
+                                    {% else %}
+                                        Register Now
+                                    {% endif %}
+                                </a>
+                                <div class="registration-status">
+                                    <span class="status-badge {{ event.registration_status|lower|cut:' ' }}">
+                                        {{ event.registration_status }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Event Sidebar -->
+            <div class="col-lg-4">
+                <!-- Event Quick Info -->
+                <div class="event-quick-info card shadow-ai">
+                    <div class="card-body">
+                        <h4 class="card-title">Quick Info</h4>
+                        <ul class="list-unstyled">
+                            <li class="info-item">
+                                <span class="info-label">Date:</span>
+                                <span class="info-value">{{ event.date|date:"M d, Y" }}</span>
+                            </li>
+                            <li class="info-item">
+                                <span class="info-label">Time:</span>
+                                <span class="info-value">{{ event.date|time:"g:i A" }}</span>
+                            </li>
+                            <li class="info-item">
+                                <span class="info-label">Location:</span>
+                                <span class="info-value">{{ event.location }}</span>
+                            </li>
+                            <li class="info-item">
+                                <span class="info-label">Type:</span>
+                                <span class="info-value">{{ event.get_event_type_display }}</span>
+                            </li>
+                            {% if event.max_attendees %}
+                            <li class="info-item">
+                                <span class="info-label">Attendees:</span>
+                                <span class="info-value">{{ event.current_attendees }}/{{ event.max_attendees }}</span>
+                            </li>
+                            {% endif %}
+                            <li class="info-item">
+                                <span class="info-label">Status:</span>
+                                <span class="info-value">
+                                    {% if event.is_upcoming %}Upcoming{% else %}Past Event{% endif %}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Related Events -->
+                {% if related_events %}
+                <div class="related-events-card card shadow-ai mt-4">
+                    <div class="card-body">
+                        <h4 class="card-title">Related Events</h4>
+                        <ul class="list-unstyled">
+                            {% for related_event in related_events %}
+                            <li class="mb-3">
+                                <a href="{% url 'events:event_detail' related_event.pk %}" class="related-event-link">
+                                    <div class="related-event">
+                                        <h6 class="related-event-title">{{ related_event.title }}</h6>
+                                        <p class="related-event-date">
+                                            <i class="fas fa-calendar me-1"></i>
+                                            {{ related_event.date|date:"M d, Y" }}
+                                        </p>
+                                        <p class="related-event-location">
+                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                            {{ related_event.location }}
+                                        </p>
+                                    </div>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section bg-gradient-primary text-white text-center">
+    <div class="container">
+        <h2 class="mb-4">Stay Updated with Our Events</h2>
+        <p class="lead mb-4">
+            Don't miss out on our upcoming AI and technology events. Join our community and stay informed.
+        </p>
+        <a href="{% url 'events:events' %}" class="btn btn-light btn-lg me-3">
+            <i class="fas fa-calendar me-2"></i> View All Events
+        </a>
+        <a href="{% url 'contact:contact' %}" class="btn btn-outline-light btn-lg">
+            <i class="fas fa-envelope me-2"></i> Contact Us
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Professional Event Detail Page Styling */
+
+/* Event Detail Card */
+.event-detail-card {
+    background: var(--ai-white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+/* Event Image Container */
+.event-image-container {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+}
+
+.event-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4));
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 2rem;
+}
+
+.event-badges {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.type-badge {
+    background: var(--ai-accent);
+    color: var(--ai-primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.featured-badge {
+    background: var(--ai-secondary);
+    color: var(--ai-white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Event Placeholder */
+.event-placeholder-large {
+    height: 400px;
+    background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ai-white);
+    text-align: center;
+}
+
+.placeholder-content i {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+}
+
+.placeholder-content h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.placeholder-content p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Event Content */
+.event-content {
+    padding: 3rem;
+}
+
+.content-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--ai-border);
+}
+
+.content-title {
+    color: var(--ai-primary);
+    font-weight: 700;
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+}
+
+.event-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ai-gray);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.meta-item i {
+    color: var(--ai-accent);
+    font-size: 0.9rem;
+}
+
+.event-description {
+    color: var(--ai-dark);
+    line-height: 1.8;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+/* Event Info Grid */
+.event-info {
+    background: var(--ai-soft-bg);
+    padding: 2.5rem;
+    margin: 2rem 0;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.info-card {
+    background: var(--ai-white);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: transform 0.2s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.info-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--ai-accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ai-primary);
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.info-content h4 {
+    color: var(--ai-primary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.info-content p {
+    color: var(--ai-dark);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.info-content small {
+    color: var(--ai-gray);
+    font-size: 0.9rem;
+}
+
+.progress {
+    height: 8px;
+    background: var(--ai-light);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, var(--ai-accent), var(--ai-secondary));
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+/* Registration Section */
+.registration-section {
+    background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+    color: var(--ai-white);
+    padding: 3rem;
+    border-radius: 15px;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.registration-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.registration-text {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.registration-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.registration-status {
+    margin-top: 1rem;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.open-for-registration {
+    background: var(--ai-accent);
+    color: var(--ai-primary);
+}
+
+.status-badge.fully-booked {
+    background: #dc3545;
+    color: var(--ai-white);
+}
+
+/* Sidebar */
+.event-quick-info,
+.related-events-card {
+    background: var(--ai-white);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.event-quick-info .card-body,
+.related-events-card .card-body {
+    padding: 2rem;
+}
+
+.event-quick-info .card-title,
+.related-events-card .card-title {
+    color: var(--ai-primary);
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--ai-border);
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px dashed var(--ai-border);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--ai-primary);
+    font-size: 0.95rem;
+}
+
+.info-value {
+    color: var(--ai-gray);
+    font-weight: 500;
+}
+
+/* Related Events */
+.related-event-link {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+
+.related-event-link:hover {
+    color: var(--ai-secondary);
+}
+
+.related-event {
+    padding: 1rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.related-event-link:hover .related-event {
+    background: var(--ai-soft-bg);
+    transform: translateX(5px);
+}
+
+.related-event-title {
+    color: var(--ai-primary);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.related-event-date,
+.related-event-location {
+    color: var(--ai-gray);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Hero Badges */
+.hero-badges {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.badge-type {
+    background: var(--ai-accent);
+    color: var(--ai-primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-featured {
+    background: var(--ai-secondary);
+    color: var(--ai-white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.badge-upcoming {
+    background: #28a745;
+    color: var(--ai-white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.badge-past {
+    background: var(--ai-gray);
+    color: var(--ai-white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .event-content {
+        padding: 2rem;
+    }
+    
+    .content-title {
+        font-size: 1.8rem;
+    }
+    
+    .event-meta {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .event-image-container {
+        height: 250px;
+    }
+    
+    .event-placeholder-large {
+        height: 250px;
+    }
+    
+    .placeholder-content h3 {
+        font-size: 1.5rem;
+    }
+    
+    .registration-actions {
+        flex-direction: column;
+    }
+    
+    .info-card {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>
+{% endblock %}

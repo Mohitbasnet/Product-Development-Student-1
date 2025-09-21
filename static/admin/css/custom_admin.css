@@ -1,0 +1,319 @@
+/* AI-Solutions Custom Admin CSS */
+
+/* Main Brand Colors (Admin Theme Palette) */
+:root {
+    --ai-primary: #001f34;      /* rgb(0, 31, 52) */
+    --ai-secondary: #0058a0;    /* rgb(0, 88, 160) */
+    --ai-secondary-dark: #003866; /* rgb(0, 56, 102) */
+    --ai-accent: #ffcd03;       /* rgb(255, 205, 3) */
+    --ai-success: #2ea44f;
+    --ai-warning: #ffcd03;
+    --ai-danger: #ff7575;       /* rgb(255, 117, 117) */
+    --ai-dark: #0a0a0a;         /* rgb(10, 10, 10) */
+    --ai-muted: #858585;        /* rgb(133, 133, 133) */
+    --ai-light: #f8f9fa;        /* rgb(248, 249, 250) */
+    --ai-border: #dee2e6;       /* rgb(222, 226, 230) */
+}
+
+/* Header Customization */
+.main-header .navbar {
+    background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary)) !important;
+    border-bottom: 2px solid var(--ai-accent);
+}
+
+.main-header .navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: white !important;
+}
+
+.main-header .navbar-brand:hover {
+    color: var(--ai-accent) !important;
+}
+
+/* Sidebar Customization */
+.main-sidebar {
+    background: linear-gradient(180deg, var(--ai-primary), var(--ai-secondary-dark)) !important;
+    /* Remove extra border to avoid double vertical bars */
+    border-right: none;
+}
+
+/* Hide duplicate app section headers like "Contact", "Events", etc. */
+.main-sidebar .nav-sidebar .nav-header {
+    display: none !important;
+}
+
+/* Add subtle spacing between groups now that headers are hidden */
+.main-sidebar .nav-sidebar > .nav-item { margin-top: 6px; }
+.main-sidebar .nav-sidebar > .nav-item:first-child { margin-top: 0; }
+
+.main-sidebar .nav-sidebar .nav-item .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    margin: 2px 8px;
+    transition: all 0.3s ease;
+    border-left: none !important;
+    padding: 10px 14px;
+    font-weight: 500;
+}
+
+.main-sidebar .nav-sidebar .nav-item .nav-link:hover {
+    background: var(--ai-secondary);
+    color: white;
+    transform: translateX(5px);
+    box-shadow: none;
+    border-left: none !important;
+}
+
+.main-sidebar .nav-sidebar .nav-item .nav-link.active {
+    background: var(--ai-accent);
+    color: var(--ai-primary);
+    font-weight: 600;
+    border-left: none !important;
+}
+
+/* Hide submenu arrows and second-level menus to keep a simple list */
+.main-sidebar .nav-sidebar .nav-item > .nav-link .right { display: none !important; }
+.main-sidebar .nav-treeview { display: none !important; }
+
+/* Content Area */
+.content-wrapper {
+    background: var(--ai-light);
+}
+
+/* Cards and Panels */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--ai-accent), #ffffff);
+    border-bottom: 2px solid var(--ai-border);
+    border-radius: 12px 12px 0 0 !important;
+    font-weight: 600;
+    color: var(--ai-primary);
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(135deg, var(--ai-secondary), var(--ai-secondary-dark));
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--ai-secondary-dark), var(--ai-primary));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(49, 130, 206, 0.3);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--ai-success), #2f855a);
+    border: none;
+    border-radius: 8px;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, var(--ai-warning), #dd6b20);
+    border: none;
+    border-radius: 8px;
+}
+
+/* Tables */
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background: var(--ai-primary);
+    color: white;
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(0, 88, 160, 0.05);
+}
+
+/* Forms */
+.form-control {
+    border-radius: 8px;
+    border: 2px solid var(--ai-border);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--ai-secondary);
+    box-shadow: 0 0 0 0.2rem rgba(0, 88, 160, 0.25);
+}
+
+/* Badges */
+.badge {
+    border-radius: 20px;
+    font-weight: 500;
+    padding: 6px 12px;
+}
+
+.badge-primary {
+    background: var(--ai-secondary);
+}
+
+.badge-success {
+    background: var(--ai-success);
+}
+
+.badge-warning {
+    background: var(--ai-warning);
+}
+
+/* Statistics Cards */
+.stats-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid var(--ai-secondary);
+    transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.stats-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--ai-primary);
+    margin: 0;
+}
+
+.stats-label {
+    color: var(--ai-dark);
+    font-weight: 500;
+    margin: 0;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+/* AI-themed Icons */
+.ai-icon {
+    background: linear-gradient(135deg, var(--ai-secondary), var(--ai-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.2rem;
+}
+
+/* Loading Animation */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--ai-light);
+    border-radius: 50%;
+    border-top-color: var(--ai-secondary);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .main-sidebar.show {
+        transform: translateX(0);
+    }
+    
+    .stats-card {
+        margin-bottom: 15px;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--ai-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--ai-secondary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--ai-primary);
+}
+
+/* Alert Styling */
+.alert {
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: #155724;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    color: #856404;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+    color: #721c24;
+}
+
+/* Footer */
+.main-footer {
+    background: var(--ai-primary);
+    color: white;
+    border-top: 2px solid var(--ai-accent);
+}
+
+/* Animation for new items */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-out;
+}

@@ -1,0 +1,380 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Events - AI-Solutions{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8 text-center">
+                <h1 class="hero-title">Our Events</h1>
+                <p class="hero-subtitle">
+                    Join our upcoming events and explore our past activities and conferences.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Event Filter -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8 text-center">
+                <h3 class="section-title mb-4">Filter Events</h3>
+                <div class="event-filters">
+                    <a href="{% url 'events:events' %}?type=upcoming" class="filter-btn {% if selected_type == 'upcoming' %}active{% endif %}">
+                        <i class="fas fa-calendar-plus me-2"></i>
+                        Upcoming Events
+                    </a>
+                    <a href="{% url 'events:events' %}?type=past" class="filter-btn {% if selected_type == 'past' %}active{% endif %}">
+                        <i class="fas fa-history me-2"></i>
+                        Past Events
+                    </a>
+                    <a href="{% url 'events:events' %}" class="filter-btn {% if not selected_type %}active{% endif %}">
+                        <i class="fas fa-list me-2"></i>
+                        All Events
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Events List -->
+<section class="section">
+    <div class="container">
+        {% if events %}
+        <div class="events-list">
+            {% for event in events %}
+            <div class="event-card">
+                <div class="row align-items-center">
+                    <div class="col-lg-4">
+                        {% if event.image %}
+                        <div class="event-image">
+                            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="img-fluid">
+                        </div>
+                        {% else %}
+                        <div class="event-image placeholder">
+                            <i class="fas fa-calendar-alt fa-3x"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="event-content">
+                            <div class="event-header">
+                                <h3 class="event-title">{{ event.title }}</h3>
+                                {% if event.is_featured %}
+                                <span class="event-featured">
+                                    <i class="fas fa-star"></i> Featured
+                                </span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="event-meta">
+                                <div class="event-date">
+                                    <i class="fas fa-calendar me-2"></i>
+                                    {{ event.date|date:"F d, Y" }} at {{ event.date|time:"g:i A" }}
+                                </div>
+                                <div class="event-location">
+                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                    {{ event.location }}
+                                </div>
+                                {% if event.max_attendees %}
+                                <div class="event-attendees">
+                                    <i class="fas fa-users me-2"></i>
+                                    {{ event.current_attendees }}/{{ event.max_attendees }} attendees
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <p class="event-description">{{ event.description|truncatewords:30 }}</p>
+                            
+                            <div class="event-actions">
+                                <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-primary">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    View Details
+                                </a>
+                                {% if event.registration_url and event.event_type == 'upcoming' %}
+                                <a href="{{ event.registration_url }}" class="btn btn-outline-primary" target="_blank">
+                                    <i class="fas fa-external-link-alt me-2"></i>
+                                    Register Now
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-events text-center">
+            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+            <h4>No Events Found</h4>
+            <p class="text-muted">No events available in this category at the moment.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Event Stats -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="{{ events|length }}">0</div>
+                    <div class="stat-label">Total Events</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="0">0</div>
+                    <div class="stat-label">Upcoming Events</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="0">0</div>
+                    <div class="stat-label">Past Events</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="0">0</div>
+                    <div class="stat-label">Total Attendees</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section bg-gradient-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Stay Updated with Our Events</h2>
+        <p class="lead mb-4">
+            Don't miss out on our latest events and conferences. Subscribe to our newsletter for updates.
+        </p>
+        <a href="{% url 'contact:contact' %}" class="btn btn-light btn-lg">
+            <i class="fas fa-envelope me-2"></i>
+            Subscribe to Updates
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.section-title {
+    color: var(--ai-primary);
+    font-weight: 700;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.event-filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.filter-btn {
+    padding: 12px 24px;
+    background: var(--ai-white);
+    color: var(--ai-primary);
+    border: 2px solid var(--ai-light);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    text-align: center;
+    min-width: 160px;
+    justify-content: center;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--ai-secondary);
+    color: var(--ai-white);
+    border-color: var(--ai-secondary);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 88, 160, 0.2);
+}
+
+.events-list {
+    margin-top: 2rem;
+}
+
+.event-card {
+    background: var(--ai-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    transition: var(--transition-normal);
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.event-image {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-normal);
+}
+
+.event-card:hover .event-image img {
+    transform: scale(1.1);
+}
+
+.event-image.placeholder {
+    background: var(--ai-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ai-gray);
+}
+
+.event-content {
+    padding: 2rem;
+}
+
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.event-title {
+    color: var(--ai-primary);
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.event-featured {
+    background: var(--ai-warning);
+    color: var(--ai-white);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.event-meta > div {
+    color: var(--ai-gray);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+}
+
+.event-meta i {
+    color: var(--ai-secondary);
+}
+
+.event-description {
+    color: var(--ai-gray);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.event-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.no-events {
+    padding: 3rem 1rem;
+}
+
+.stat-card {
+    background: var(--ai-white);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    border-left: 4px solid var(--ai-secondary);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--ai-primary);
+    margin: 0;
+}
+
+.stat-label {
+    color: var(--ai-gray);
+    font-weight: 500;
+    margin: 0;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+    .event-filters {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .filter-btn {
+        width: 250px;
+        justify-content: center;
+    }
+    
+    .event-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .event-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .event-actions {
+        flex-direction: column;
+    }
+    
+    .event-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+</style>
+{% endblock %}
+

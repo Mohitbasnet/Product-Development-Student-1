@@ -1,0 +1,520 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI-Solutions - Innovating the Future of Digital Employee Experience{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="hero-title animate-fadeInLeft">
+                        Innovating the Future of 
+                        <span class="text-gradient">Digital Employee Experience</span>
+                    </h1>
+                    <p class="hero-subtitle animate-fadeInLeft">
+                        AI-Solutions leverages cutting-edge artificial intelligence to assist various industries 
+                        with software solutions that rapidly and proactively address issues impacting the digital 
+                        employee experience.
+                    </p>
+                    <div class="hero-buttons animate-fadeInLeft">
+                        <a href="{% url 'contact:contact' %}" class="btn btn-primary">
+                            <i class="fas fa-rocket me-2"></i>
+                            Get Started
+                        </a>
+                        <a href="{% url 'services:services' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-cogs me-2"></i>
+                            Our Services
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image animate-fadeInRight">
+                    <div class="ai-visualization">
+                        <div class="ai-circle">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="ai-particles">
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="150">0</div>
+                    <div class="stat-label">Projects Completed</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="50">0</div>
+                    <div class="stat-label">Happy Clients</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="24">0</div>
+                    <div class="stat-label">Hours Support</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="5">0</div>
+                    <div class="stat-label">Years Experience</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Services Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our AI-Powered Solutions</h2>
+            <p class="section-subtitle">
+                Discover how our innovative AI solutions can transform your digital workplace
+            </p>
+        </div>
+        
+        <div class="row">
+            {% for service in featured_services %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card service-card h-100">
+                    <div class="service-icon">
+                        <i class="{{ service.icon }}"></i>
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="service-title">{{ service.title }}</h5>
+                        <p class="service-description">{{ service.short_description }}</p>
+                        <ul class="service-features">
+                            {% for feature in service.features_list %}
+                            <li>{{ feature }}</li>
+                            {% endfor %}
+                        </ul>
+                        <div class="service-price">
+                            <span class="price">{{ service.formatted_price }}</span>
+                        </div>
+                        <a href="{% url 'services:services' %}" class="btn btn-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No featured services available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="section bg-gradient-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="mb-4">Why Choose AI-Solutions?</h2>
+                <div class="feature-list">
+                    <div class="feature-item mb-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h5>AI-Powered Innovation</h5>
+                            <p>Leverage cutting-edge artificial intelligence to solve complex business challenges and enhance productivity.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item mb-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h5>Rapid Prototyping</h5>
+                            <p>Get affordable, fast prototyping solutions that accelerate your design and engineering processes.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item mb-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h5>Expert Team</h5>
+                            <p>Work with experienced professionals who understand both technology and business needs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="ai-visualization-large">
+                    <div class="ai-network">
+                        <div class="node node-1"></div>
+                        <div class="node node-2"></div>
+                        <div class="node node-3"></div>
+                        <div class="node node-4"></div>
+                        <div class="node node-5"></div>
+                        <div class="connection connection-1"></div>
+                        <div class="connection connection-2"></div>
+                        <div class="connection connection-3"></div>
+                        <div class="connection connection-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recent Testimonials Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-title">
+            <h2>What Our Clients Say</h2>
+            <p class="section-subtitle">
+                Hear from businesses that have transformed their digital experience with our AI solutions
+            </p>
+        </div>
+        
+        <div class="row">
+            {% for testimonial in featured_testimonials %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= testimonial.rating %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="testimonial-content">
+                        "{{ testimonial.content }}"
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">
+                            {{ testimonial.customer_name|first }}
+                        </div>
+                        <div class="testimonial-info">
+                            <h6>{{ testimonial.customer_name }}</h6>
+                            <p>{{ testimonial.company }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No testimonials available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Latest News Section -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="section-title">
+            <h2>Latest News & Insights</h2>
+            <p class="section-subtitle">
+                Stay updated with the latest trends in AI and digital transformation
+            </p>
+        </div>
+        
+        <div class="row">
+            {% for article in recent_articles %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100">
+                    {% if article.image %}
+                    <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.title }}" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <div class="article-meta mb-2">
+                            <span class="badge bg-primary">{{ article.get_category_display }}</span>
+                            <small class="text-muted ms-2">{{ article.published_date|date:"M d, Y" }}</small>
+                        </div>
+                        <h5 class="card-title">{{ article.title }}</h5>
+                        <p class="card-text">{{ article.excerpt }}</p>
+                        <div class="article-footer">
+                            <small class="text-muted">
+                                <i class="fas fa-user me-1"></i>{{ article.author }}
+                                <i class="fas fa-clock ms-3 me-1"></i>{{ article.reading_time }} min read
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No articles available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'news:news' %}" class="btn btn-outline-primary">View All News</a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section bg-gradient-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Transform Your Digital Experience?</h2>
+        <p class="lead mb-4">
+            Join the future of digital employee experience with our AI-powered solutions.
+        </p>
+        <div class="cta-buttons">
+            <a href="{% url 'contact:contact' %}" class="btn btn-light btn-lg me-3">
+                <i class="fas fa-envelope me-2"></i>
+                Get in Touch
+            </a>
+            <a href="{% url 'services:services' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-cogs me-2"></i>
+                Explore Solutions
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Hero Section Styles */
+.hero-image {
+    position: relative;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-visualization {
+    position: relative;
+    width: 300px;
+    height: 300px;
+}
+
+.ai-circle {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: var(--ai-accent);
+    margin: 50px auto;
+    animation: pulse 2s infinite;
+}
+
+.ai-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--ai-accent);
+    border-radius: 50%;
+    animation: float 3s infinite ease-in-out;
+}
+
+.particle:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+.particle:nth-child(2) { top: 20%; right: 20%; animation-delay: 0.5s; }
+.particle:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 1s; }
+.particle:nth-child(4) { bottom: 20%; right: 20%; animation-delay: 1.5s; }
+.particle:nth-child(5) { top: 50%; left: 10%; animation-delay: 2s; }
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); opacity: 0.7; }
+    50% { transform: translateY(-20px); opacity: 1; }
+}
+
+/* Statistics Section */
+.stat-card {
+    background: var(--ai-white);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    border-left: 4px solid var(--ai-secondary);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--ai-primary);
+    margin: 0;
+}
+
+.stat-label {
+    color: var(--ai-gray);
+    font-weight: 500;
+    margin: 0;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+/* Feature List */
+.feature-list {
+    margin-top: 2rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.feature-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--ai-accent);
+    flex-shrink: 0;
+}
+
+.feature-content h5 {
+    color: var(--ai-white);
+    margin-bottom: 0.5rem;
+}
+
+.feature-content p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+}
+
+/* AI Visualization Large */
+.ai-visualization-large {
+    position: relative;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-network {
+    position: relative;
+    width: 300px;
+    height: 300px;
+}
+
+.node {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: var(--ai-accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.node-1 { top: 0; left: 50%; transform: translateX(-50%); animation-delay: 0s; }
+.node-2 { top: 50%; left: 0; transform: translateY(-50%); animation-delay: 0.5s; }
+.node-3 { top: 50%; right: 0; transform: translateY(-50%); animation-delay: 1s; }
+.node-4 { bottom: 0; left: 25%; transform: translateX(-50%); animation-delay: 1.5s; }
+.node-5 { bottom: 0; right: 25%; transform: translateX(-50%); animation-delay: 2s; }
+
+.connection {
+    position: absolute;
+    height: 2px;
+    background: var(--ai-accent);
+    opacity: 0.6;
+    animation: pulse 2s infinite;
+}
+
+.connection-1 { top: 25%; left: 25%; width: 50%; transform: rotate(45deg); }
+.connection-2 { top: 25%; right: 25%; width: 50%; transform: rotate(-45deg); }
+.connection-3 { bottom: 25%; left: 12.5%; width: 25%; transform: rotate(45deg); }
+.connection-4 { bottom: 25%; right: 12.5%; width: 25%; transform: rotate(-45deg); }
+
+/* Service Price */
+.service-price {
+    margin: 1rem 0;
+}
+
+.price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ai-primary);
+}
+
+/* Article Meta */
+.article-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.article-footer {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--ai-light);
+}
+
+/* CTA Buttons */
+.cta-buttons {
+    margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+    .hero-image {
+        height: 300px;
+        margin-top: 2rem;
+    }
+    
+    .ai-visualization {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .ai-circle {
+        width: 150px;
+        height: 150px;
+        font-size: 3rem;
+    }
+    
+    .cta-buttons .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+}
+</style>
+{% endblock %}

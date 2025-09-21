@@ -1,0 +1,854 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ article.title }} - AI-Solutions News{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8 text-center">
+                <h1 class="hero-title">{{ article.title }}</h1>
+                <p class="hero-subtitle">
+                    {{ article.excerpt }}
+                </p>
+                <div class="hero-badges">
+                    <span class="badge badge-category">{{ article.get_category_display }}</span>
+                    {% if article.is_featured %}
+                    <span class="badge badge-featured">
+                        <i class="fas fa-star"></i> Featured
+                    </span>
+                    {% endif %}
+                    <span class="badge badge-reading-time">
+                        <i class="fas fa-clock"></i> {{ article.reading_time }} min read
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Article Detail Section -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Article Content -->
+            <div class="col-lg-8">
+                <article class="article-detail-card">
+                    <!-- Article Image -->
+                    {% if article.image %}
+                    <div class="article-image-container">
+                        <img src="{{ article.image.url }}" alt="{{ article.title }}" class="article-image">
+                        <div class="image-overlay">
+                            <div class="article-badges">
+                                <span class="category-badge">{{ article.get_category_display }}</span>
+                                {% if article.is_featured %}
+                                <span class="featured-badge">
+                                    <i class="fas fa-star"></i> Featured
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="article-placeholder-large">
+                        <div class="placeholder-content">
+                            <i class="fas fa-newspaper"></i>
+                            <h3>{{ article.title }}</h3>
+                            <p>{{ article.get_category_display }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Article Meta -->
+                    <div class="article-meta">
+                        <div class="meta-left">
+                            <div class="author-info">
+                                <div class="author-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="author-details">
+                                    <span class="author-name">{{ article.author }}</span>
+                                    <span class="publish-date">{{ article.published_date|date:"M d, Y" }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="meta-right">
+                            <div class="article-stats">
+                                <span class="stat-item">
+                                    <i class="fas fa-eye"></i>
+                                    {{ article.view_count }} views
+                                </span>
+                                <span class="stat-item">
+                                    <i class="fas fa-clock"></i>
+                                    {{ article.reading_time }} min read
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Article Content -->
+                    <div class="article-content">
+                        <div class="content-body">
+                            {{ article.content|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <!-- Article Tags -->
+                    {% if article.tag_list %}
+                    <div class="article-tags">
+                        <h4 class="tags-title">
+                            <i class="fas fa-tags me-2"></i>Tags
+                        </h4>
+                        <div class="tags-list">
+                            {% for tag in article.tag_list %}
+                            <span class="tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Article Actions -->
+                    <div class="article-actions">
+                        <div class="action-buttons">
+                            <button class="btn btn-outline-primary" onclick="window.print()">
+                                <i class="fas fa-print me-2"></i>Print Article
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="shareArticle()">
+                                <i class="fas fa-share-alt me-2"></i>Share
+                            </button>
+                        </div>
+                        <div class="social-share">
+                            <span class="share-label">Share on:</span>
+                            <a href="https://twitter.com/intent/tweet?text={{ article.title|urlencode }}&url={{ request.build_absolute_uri }}" 
+                               target="_blank" class="social-link twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" 
+                               target="_blank" class="social-link linkedin">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                               target="_blank" class="social-link facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            
+            <!-- Article Sidebar -->
+            <div class="col-lg-4">
+                <!-- Article Info -->
+                <div class="article-info-card card shadow-ai">
+                    <div class="card-body">
+                        <h4 class="card-title">Article Info</h4>
+                        <ul class="list-unstyled">
+                            <li class="info-item">
+                                <span class="info-label">Author:</span>
+                                <span class="info-value">{{ article.author }}</span>
+                            </li>
+                            <li class="info-item">
+                                <span class="info-label">Published:</span>
+                                <span class="info-value">{{ article.published_date|date:"M d, Y" }}</span>
+                            </li>
+                            <li class="info-item">
+                                <span class="info-label">Category:</span>
+                                <span class="info-value">{{ article.get_category_display }}</span>
+                            </li>
+                            <li class="info-item">
+                                <span class="info-label">Reading Time:</span>
+                                <span class="info-value">{{ article.reading_time }} minutes</span>
+                            </li>
+                            <li class="info-item">
+                                <span class="info-label">Views:</span>
+                                <span class="info-value">{{ article.view_count }}</span>
+                            </li>
+                            <li class="info-item">
+                                <span class="info-label">Last Updated:</span>
+                                <span class="info-value">{{ article.updated_at|date:"M d, Y" }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Recent Articles -->
+                {% if recent_articles %}
+                <div class="recent-articles-card card shadow-ai mt-4">
+                    <div class="card-body">
+                        <h4 class="card-title">Recent Articles</h4>
+                        <div class="recent-articles-list">
+                            {% for recent_article in recent_articles %}
+                            <div class="recent-article-item">
+                                <a href="{% url 'news:article_detail' recent_article.slug %}" class="recent-article-link">
+                                    <div class="recent-article-content">
+                                        <h6 class="recent-article-title">{{ recent_article.title }}</h6>
+                                        <p class="recent-article-excerpt">{{ recent_article.excerpt|truncatewords:15 }}</p>
+                                        <div class="recent-article-meta">
+                                            <span class="recent-article-date">
+                                                <i class="fas fa-calendar me-1"></i>
+                                                {{ recent_article.published_date|date:"M d, Y" }}
+                                            </span>
+                                            <span class="recent-article-category">
+                                                {{ recent_article.get_category_display }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Related Articles -->
+                {% if related_articles %}
+                <div class="related-articles-card card shadow-ai mt-4">
+                    <div class="card-body">
+                        <h4 class="card-title">Related Articles</h4>
+                        <div class="related-articles-list">
+                            {% for related_article in related_articles %}
+                            <div class="related-article-item">
+                                <a href="{% url 'news:article_detail' related_article.slug %}" class="related-article-link">
+                                    <div class="related-article-content">
+                                        <h6 class="related-article-title">{{ related_article.title }}</h6>
+                                        <p class="related-article-excerpt">{{ related_article.excerpt|truncatewords:12 }}</p>
+                                        <div class="related-article-meta">
+                                            <span class="related-article-date">
+                                                <i class="fas fa-calendar me-1"></i>
+                                                {{ related_article.published_date|date:"M d, Y" }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section bg-gradient-primary text-white text-center">
+    <div class="container">
+        <h2 class="mb-4">Stay Updated with Our Latest News</h2>
+        <p class="lead mb-4">
+            Get the latest insights, news, and updates from the world of AI and technology.
+        </p>
+        <a href="{% url 'news:news' %}" class="btn btn-light btn-lg me-3">
+            <i class="fas fa-newspaper me-2"></i> View All Articles
+        </a>
+        <a href="{% url 'contact:contact' %}" class="btn btn-outline-light btn-lg">
+            <i class="fas fa-envelope me-2"></i> Subscribe to Updates
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Professional Article Detail Page Styling */
+
+/* Article Detail Card */
+.article-detail-card {
+    background: var(--ai-white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+/* Article Image Container */
+.article-image-container {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+}
+
+.article-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4));
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 2rem;
+}
+
+.article-badges {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.category-badge {
+    background: var(--ai-accent);
+    color: var(--ai-primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.featured-badge {
+    background: var(--ai-secondary);
+    color: var(--ai-white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Article Placeholder */
+.article-placeholder-large {
+    height: 400px;
+    background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ai-white);
+    text-align: center;
+}
+
+.placeholder-content i {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+}
+
+.placeholder-content h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.placeholder-content p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Article Meta */
+.article-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 3rem;
+    border-bottom: 2px solid var(--ai-border);
+    background: var(--ai-soft-bg);
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    background: var(--ai-accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ai-primary);
+    font-size: 1.2rem;
+}
+
+.author-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.author-name {
+    font-weight: 700;
+    color: var(--ai-primary);
+    font-size: 1.1rem;
+}
+
+.publish-date {
+    color: var(--ai-gray);
+    font-size: 0.9rem;
+}
+
+.article-stats {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ai-gray);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.stat-item i {
+    color: var(--ai-accent);
+}
+
+/* Article Content */
+.article-content {
+    padding: 3rem;
+}
+
+.content-body {
+    color: var(--ai-dark);
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+.content-body p {
+    margin-bottom: 1.5rem;
+}
+
+.content-body h1,
+.content-body h2,
+.content-body h3,
+.content-body h4,
+.content-body h5,
+.content-body h6 {
+    color: var(--ai-primary);
+    font-weight: 700;
+    margin: 2rem 0 1rem 0;
+}
+
+.content-body h2 {
+    font-size: 1.8rem;
+    border-bottom: 2px solid var(--ai-border);
+    padding-bottom: 0.5rem;
+}
+
+.content-body h3 {
+    font-size: 1.5rem;
+}
+
+.content-body ul,
+.content-body ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+}
+
+.content-body li {
+    margin-bottom: 0.5rem;
+}
+
+.content-body blockquote {
+    border-left: 4px solid var(--ai-accent);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: var(--ai-gray);
+    background: var(--ai-soft-bg);
+    padding: 1.5rem;
+    border-radius: 0 10px 10px 0;
+}
+
+/* Article Tags */
+.article-tags {
+    padding: 2rem 3rem;
+    border-top: 2px solid var(--ai-border);
+    background: var(--ai-soft-bg);
+}
+
+.tags-title {
+    color: var(--ai-primary);
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.tag {
+    background: var(--ai-accent);
+    color: var(--ai-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Article Actions */
+.article-actions {
+    padding: 2rem 3rem;
+    background: var(--ai-white);
+    border-top: 2px solid var(--ai-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-share {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.share-label {
+    color: var(--ai-gray);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ai-white);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.social-link.twitter {
+    background: #1da1f2;
+}
+
+.social-link.linkedin {
+    background: #0077b5;
+}
+
+.social-link.facebook {
+    background: #4267b2;
+}
+
+.social-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Sidebar */
+.article-info-card,
+.recent-articles-card,
+.related-articles-card {
+    background: var(--ai-white);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.article-info-card .card-body,
+.recent-articles-card .card-body,
+.related-articles-card .card-body {
+    padding: 2rem;
+}
+
+.article-info-card .card-title,
+.recent-articles-card .card-title,
+.related-articles-card .card-title {
+    color: var(--ai-primary);
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--ai-border);
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px dashed var(--ai-border);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--ai-primary);
+    font-size: 0.95rem;
+}
+
+.info-value {
+    color: var(--ai-gray);
+    font-weight: 500;
+}
+
+/* Recent Articles */
+.recent-articles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.recent-article-item {
+    border-bottom: 1px solid var(--ai-border);
+    padding-bottom: 1.5rem;
+}
+
+.recent-article-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.recent-article-link {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+
+.recent-article-link:hover {
+    color: var(--ai-secondary);
+}
+
+.recent-article-content {
+    transition: all 0.3s ease;
+}
+
+.recent-article-link:hover .recent-article-content {
+    transform: translateX(5px);
+}
+
+.recent-article-title {
+    color: var(--ai-primary);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.recent-article-excerpt {
+    color: var(--ai-gray);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+}
+
+.recent-article-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.recent-article-date {
+    color: var(--ai-gray);
+    display: flex;
+    align-items: center;
+}
+
+.recent-article-category {
+    background: var(--ai-accent);
+    color: var(--ai-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Related Articles */
+.related-articles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.related-article-item {
+    border-bottom: 1px solid var(--ai-border);
+    padding-bottom: 1.5rem;
+}
+
+.related-article-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.related-article-link {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+
+.related-article-link:hover {
+    color: var(--ai-secondary);
+}
+
+.related-article-content {
+    transition: all 0.3s ease;
+}
+
+.related-article-link:hover .related-article-content {
+    transform: translateX(5px);
+}
+
+.related-article-title {
+    color: var(--ai-primary);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.related-article-excerpt {
+    color: var(--ai-gray);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+}
+
+.related-article-meta {
+    font-size: 0.8rem;
+}
+
+.related-article-date {
+    color: var(--ai-gray);
+    display: flex;
+    align-items: center;
+}
+
+/* Hero Badges */
+.hero-badges {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.badge-category {
+    background: var(--ai-accent);
+    color: var(--ai-primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-featured {
+    background: var(--ai-secondary);
+    color: var(--ai-white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.badge-reading-time {
+    background: var(--ai-primary);
+    color: var(--ai-white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .article-content {
+        padding: 2rem;
+    }
+    
+    .article-meta {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .article-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .article-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .action-buttons {
+        justify-content: center;
+    }
+    
+    .social-share {
+        justify-content: center;
+    }
+    
+    .article-image-container {
+        height: 250px;
+    }
+    
+    .article-placeholder-large {
+        height: 250px;
+    }
+    
+    .placeholder-content h3 {
+        font-size: 1.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function shareArticle() {
+    if (navigator.share) {
+        navigator.share({
+            title: '{{ article.title }}',
+            text: '{{ article.excerpt }}',
+            url: window.location.href
+        });
+    } else {
+        // Fallback for browsers that don't support Web Share API
+        const url = window.location.href;
+        const text = '{{ article.title }}';
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+        window.open(twitterUrl, '_blank');
+    }
+}
+</script>
+{% endblock %}

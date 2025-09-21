@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - AI-Solutions{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8 text-center">
+                <h1 class="hero-title">About AI-Solutions</h1>
+                <p class="hero-subtitle">
+                    We are passionate about leveraging artificial intelligence to transform 
+                    digital employee experiences across various industries.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="section-title">Our Mission</h2>
+                <p class="lead">
+                    To revolutionize digital employee experiences through innovative AI-powered solutions 
+                    that address real-world challenges in various industries.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values Section -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Values</h2>
+            <p class="section-subtitle">The principles that guide everything we do</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="value-card text-center">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h5>Innovation</h5>
+                    <p>We constantly push the boundaries of what's possible with AI technology.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="value-card text-center">
+                    <div class="value-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5>Collaboration</h5>
+                    <p>We work closely with our clients to understand their unique needs and challenges.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="value-card text-center">
+                    <div class="value-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h5>Quality</h5>
+                    <p>We deliver high-quality solutions that meet the highest standards of excellence.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Team</h2>
+            <p class="section-subtitle">Meet the experts behind our AI solutions</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="team-card text-center">
+                    <div class="team-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h5>Dr. Sarah Johnson</h5>
+                    <p class="team-role">Chief AI Officer</p>
+                    <p class="team-bio">Leading our AI research and development initiatives with over 10 years of experience.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="team-card text-center">
+                    <div class="team-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h5>Michael Chen</h5>
+                    <p class="team-role">Head of Engineering</p>
+                    <p class="team-bio">Overseeing the technical implementation of our AI solutions and platform development.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="team-card text-center">
+                    <div class="team-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h5>Emily Rodriguez</h5>
+                    <p class="team-role">Customer Success Manager</p>
+                    <p class="team-bio">Ensuring our clients achieve maximum value from our AI-powered solutions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section bg-gradient-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Transform Your Digital Experience?</h2>
+        <p class="lead mb-4">
+            Let's discuss how our AI solutions can help your organization.
+        </p>
+        <a href="{% url 'contact:contact' %}" class="btn btn-light btn-lg">
+            <i class="fas fa-envelope me-2"></i>
+            Get in Touch
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.about-visual {
+    position: relative;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-network-large {
+    position: relative;
+    width: 300px;
+    height: 300px;
+}
+
+.network-node {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: var(--ai-accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.network-node:nth-child(1) {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    animation-delay: 0s;
+}
+
+.network-node:nth-child(2) {
+    bottom: 0;
+    left: 25%;
+    transform: translateX(-50%);
+    animation-delay: 0.5s;
+}
+
+.network-node:nth-child(3) {
+    bottom: 0;
+    right: 25%;
+    transform: translateX(50%);
+    animation-delay: 1s;
+}
+
+.network-connection {
+    position: absolute;
+    height: 2px;
+    background: var(--ai-accent);
+    opacity: 0.6;
+    animation: pulse 2s infinite;
+}
+
+.network-connection:nth-child(4) {
+    top: 15px;
+    left: 25%;
+    width: 50%;
+    transform: rotate(45deg);
+}
+
+.network-connection:nth-child(5) {
+    top: 15px;
+    right: 25%;
+    width: 50%;
+    transform: rotate(-45deg);
+}
+
+.value-card {
+    background: var(--ai-white);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    height: 100%;
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.value-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--ai-secondary), var(--ai-accent));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+    color: var(--ai-white);
+}
+
+.team-card {
+    background: var(--ai-white);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    height: 100%;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.team-avatar {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--ai-secondary), var(--ai-accent));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2.5rem;
+    color: var(--ai-white);
+}
+
+.team-role {
+    color: var(--ai-secondary);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.team-bio {
+    color: var(--ai-gray);
+    font-size: 0.9rem;
+}
+</style>
+{% endblock %}

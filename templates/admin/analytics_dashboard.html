@@ -1,0 +1,978 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Analytics Dashboard - AI-Solutions Admin{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --info-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --shadow-hover: 0 15px 35px rgba(31, 38, 135, 0.2);
+        }
+
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .analytics-dashboard {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .dashboard-subtitle {
+            color: #64748b;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin: 0.5rem 0 0 0;
+        }
+
+        .realtime-badge {
+            background: var(--success-gradient);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4); }
+            50% { box-shadow: 0 4px 25px rgba(79, 172, 254, 0.6); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card.inquiries::before { background: var(--primary-gradient); }
+        .stat-card.pending::before { background: var(--warning-gradient); }
+        .stat-card.articles::before { background: var(--success-gradient); }
+        .stat-card.events::before { background: var(--info-gradient); }
+        .stat-card.testimonials::before { background: var(--secondary-gradient); }
+        .stat-card.services::before { background: var(--dark-gradient); }
+
+        .stat-icon {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            opacity: 0.9;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: scale(1.1) rotate(5deg);
+            opacity: 1;
+        }
+
+        .stat-card.inquiries .stat-icon { background: var(--primary-gradient); }
+        .stat-card.pending .stat-icon { background: var(--warning-gradient); }
+        .stat-card.articles .stat-icon { background: var(--success-gradient); }
+        .stat-card.events .stat-icon { background: var(--info-gradient); }
+        .stat-card.testimonials .stat-icon { background: var(--secondary-gradient); }
+        .stat-card.services .stat-icon { background: var(--dark-gradient); }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            line-height: 1;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover .stat-number {
+            transform: scale(1.05);
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-weight: 600;
+            margin: 1rem 0 0 0;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .stat-card:hover .stat-label {
+            color: #475569;
+        }
+
+        .chart-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .chart-container:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid transparent;
+            background-image: var(--primary-gradient);
+            background-size: 100% 2px;
+            background-repeat: no-repeat;
+            background-position: 0 100%;
+        }
+
+        .recent-activity {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recent-activity::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .recent-activity:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 1rem;
+            padding-right: 1rem;
+            transform: translateX(5px);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .activity-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            opacity: 0.1;
+            border-radius: 15px;
+        }
+
+        .activity-icon.inquiry {
+            background: var(--primary-gradient);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .activity-icon.article {
+            background: var(--success-gradient);
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        .activity-icon.event {
+            background: var(--info-gradient);
+            box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4);
+        }
+
+        .activity-item:hover .activity-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .activity-item:hover .activity-title {
+            color: #0f172a;
+        }
+
+        .activity-meta {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin: 0.25rem 0 0 0;
+            font-weight: 500;
+        }
+
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bounce-in {
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 1; transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            margin-top: 1rem;
+        }
+
+        .chart-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .metric-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .trend-up { color: #10b981; }
+        .trend-down { color: #ef4444; }
+        .trend-neutral { color: #64748b; }
+
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .gradient-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .floating-animation {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .stats-grid .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stats-grid .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stats-grid .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stats-grid .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        .stats-grid .stat-card:nth-child(5) { animation-delay: 0.5s; }
+        .stats-grid .stat-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @media (max-width: 768px) {
+            .dashboard-title { font-size: 2rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .stat-card { padding: 1.5rem; }
+            .chart-container, .recent-activity { padding: 1.5rem; }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="analytics-dashboard">
+    <div class="container-fluid">
+        <div class="dashboard-header fade-in">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="dashboard-title">📊 Analytics Dashboard</h1>
+                    <p class="dashboard-subtitle">Comprehensive overview of your AI-Solutions website performance and data</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="realtime-badge floating-animation">
+                        <i class="fas fa-circle pulse-animation"></i>
+                        Real-time Data
+                    </div>
+                    <div class="text-muted small mt-2">
+                        Last updated: <span id="last-updated">{{ "now"|date:"M d, Y H:i:s" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card inquiries bounce-in">
+                <div class="stat-number" data-count="{{ total_inquiries }}">0</div>
+                <div class="stat-label">Total Inquiries</div>
+                <div class="stat-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="metric-trend trend-up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+12% from last month</span>
+                </div>
+            </div>
+            
+            <div class="stat-card pending bounce-in">
+                <div class="stat-number" data-count="{{ pending_inquiries }}">0</div>
+                <div class="stat-label">Pending Inquiries</div>
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="metric-trend trend-neutral">
+                    <i class="fas fa-minus"></i>
+                    <span>No change</span>
+                </div>
+            </div>
+            
+            <div class="stat-card articles bounce-in">
+                <div class="stat-number" data-count="{{ published_articles }}">0</div>
+                <div class="stat-label">Published Articles</div>
+                <div class="stat-icon">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                <div class="metric-trend trend-up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+8% from last month</span>
+                </div>
+            </div>
+            
+            <div class="stat-card events bounce-in">
+                <div class="stat-number" data-count="{{ upcoming_events }}">0</div>
+                <div class="stat-label">Upcoming Events</div>
+                <div class="stat-icon">
+                    <i class="fas fa-calendar"></i>
+                </div>
+                <div class="metric-trend trend-up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+3 new events</span>
+                </div>
+            </div>
+            
+            <div class="stat-card testimonials bounce-in">
+                <div class="stat-number" data-count="{{ approved_testimonials }}">0</div>
+                <div class="stat-label">Approved Testimonials</div>
+                <div class="stat-icon">
+                    <i class="fas fa-quote-left"></i>
+                </div>
+                <div class="metric-trend trend-up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+5 this week</span>
+                </div>
+            </div>
+            
+            <div class="stat-card services bounce-in">
+                <div class="stat-number" data-count="{{ active_services }}">0</div>
+                <div class="stat-label">Active Services</div>
+                <div class="stat-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="metric-trend trend-neutral">
+                    <i class="fas fa-check"></i>
+                    <span>All active</span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="chart-container slide-up">
+                    <h3 class="section-title">📈 Monthly Inquiry Trends</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="inquiryChart"></canvas>
+                        <div class="chart-loading" id="inquiryLoading">Loading chart...</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="chart-container slide-up">
+                    <h3 class="section-title">🌍 Top Countries</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="countryChart"></canvas>
+                        <div class="chart-loading" id="countryLoading">Loading chart...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="recent-activity slide-up">
+                    <h3 class="section-title">📧 Recent Inquiries</h3>
+                    {% for inquiry in recent_inquiries_list %}
+                    <div class="activity-item">
+                        <div class="activity-icon inquiry">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">{{ inquiry.name }} - {{ inquiry.company }}</div>
+                            <div class="activity-meta">{{ inquiry.created_at|date:"M d, Y H:i" }} • {{ inquiry.country }}</div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-inbox fa-2x mb-3"></i>
+                        <p>No recent inquiries</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="recent-activity slide-up">
+                    <h3 class="section-title">📰 Recent Articles</h3>
+                    {% for article in recent_articles_list %}
+                    <div class="activity-item">
+                        <div class="activity-icon article">
+                            <i class="fas fa-newspaper"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">{{ article.title }}</div>
+                            <div class="activity-meta">{{ article.author }} • {{ article.created_at|date:"M d, Y" }}</div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-newspaper fa-2x mb-3"></i>
+                        <p>No recent articles</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="recent-activity slide-up">
+                    <h3 class="section-title">📅 Recent Events</h3>
+                    {% for event in recent_events_list %}
+                    <div class="activity-item">
+                        <div class="activity-icon event">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">{{ event.title }}</div>
+                            <div class="activity-meta">{{ event.date|date:"M d, Y" }} • {{ event.location }}</div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-calendar fa-2x mb-3"></i>
+                        <p>No recent events</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="chart-container slide-up">
+                    <h3 class="section-title">📊 Article Categories</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="categoryChart"></canvas>
+                        <div class="chart-loading" id="categoryLoading">Loading chart...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="chart-container slide-up">
+                    <h3 class="section-title">⚡ Service Performance</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="serviceChart"></canvas>
+                        <div class="chart-loading" id="serviceLoading">Loading chart...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Professional Chart Configuration
+Chart.defaults.font.family = 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+Chart.defaults.color = '#64748b';
+Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.2)';
+
+// Animation and Counter Functions
+function animateCounter(element, target, duration = 2000) {
+    const start = 0;
+    const increment = target / (duration / 16);
+    let current = start;
+    
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+        element.textContent = Math.floor(current);
+    }, 16);
+}
+
+function hideLoading(elementId) {
+    const loading = document.getElementById(elementId);
+    if (loading) loading.style.display = 'none';
+}
+
+// Initialize counters when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate stat counters
+    const statNumbers = document.querySelectorAll('.stat-number[data-count]');
+    statNumbers.forEach((stat, index) => {
+        setTimeout(() => {
+            const target = parseInt(stat.getAttribute('data-count'));
+            animateCounter(stat, target);
+        }, index * 200);
+    });
+});
+
+// Monthly Inquiry Trends Chart
+setTimeout(() => {
+    const inquiryCtx = document.getElementById('inquiryChart').getContext('2d');
+    hideLoading('inquiryLoading');
+    
+    new Chart(inquiryCtx, {
+        type: 'line',
+        data: {
+            labels: [{% for item in monthly_inquiries %}'{{ item.month }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+            datasets: [{
+                label: 'Inquiries',
+                data: [{% for item in monthly_inquiries %}{{ item.count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                borderColor: 'rgba(102, 126, 234, 1)',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: 'rgba(102, 126, 234, 1)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 6,
+                pointHoverRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: 'rgba(102, 126, 234, 1)',
+                    borderWidth: 1,
+                    cornerRadius: 8
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#64748b', font: { weight: 500 } }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                    ticks: { color: '#64748b', font: { weight: 500 } }
+                }
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
+            }
+        }
+    });
+}, 500);
+
+// Country Distribution Chart
+setTimeout(() => {
+    const countryCtx = document.getElementById('countryChart').getContext('2d');
+    hideLoading('countryLoading');
+    
+    new Chart(countryCtx, {
+        type: 'doughnut',
+        data: {
+            labels: [{% for country in country_stats %}'{{ country.country }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+            datasets: [{
+                data: [{% for country in country_stats %}{{ country.count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(240, 147, 251, 0.8)',
+                    'rgba(79, 172, 254, 0.8)',
+                    'rgba(67, 233, 123, 0.8)',
+                    'rgba(250, 112, 154, 0.8)',
+                    'rgba(44, 62, 80, 0.8)'
+                ],
+                borderColor: '#fff',
+                borderWidth: 2,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true,
+                        font: { size: 12, weight: 500 }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    cornerRadius: 8
+                }
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
+            }
+        }
+    });
+}, 1000);
+
+// Article Categories Chart
+setTimeout(() => {
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    hideLoading('categoryLoading');
+    
+    new Chart(categoryCtx, {
+        type: 'bar',
+        data: {
+            labels: [{% for category in article_categories %}'{{ category.category|title }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+            datasets: [{
+                label: 'Articles',
+                data: [{% for category in article_categories %}{{ category.count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                backgroundColor: 'rgba(79, 172, 254, 0.8)',
+                borderColor: 'rgba(79, 172, 254, 1)',
+                borderWidth: 2,
+                borderRadius: 8,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    cornerRadius: 8
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#64748b', font: { weight: 500 } }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                    ticks: { color: '#64748b', font: { weight: 500 } }
+                }
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
+            }
+        }
+    });
+}, 1500);
+
+// Service Performance Chart
+setTimeout(() => {
+    const serviceCtx = document.getElementById('serviceChart').getContext('2d');
+    hideLoading('serviceLoading');
+    
+    new Chart(serviceCtx, {
+        type: 'radar',
+        data: {
+            labels: ['Performance', 'Reliability', 'Scalability', 'Security', 'Support', 'Innovation'],
+            datasets: [{
+                label: 'Service Rating',
+                data: [95, 88, 92, 90, 85, 93],
+                backgroundColor: 'rgba(250, 112, 154, 0.2)',
+                borderColor: 'rgba(250, 112, 154, 1)',
+                borderWidth: 3,
+                pointBackgroundColor: 'rgba(250, 112, 154, 1)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    cornerRadius: 8
+                }
+            },
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                    ticks: { 
+                        color: '#64748b', 
+                        font: { weight: 500 },
+                        stepSize: 20
+                    },
+                    pointLabels: {
+                        color: '#64748b',
+                        font: { weight: 600, size: 12 }
+                    }
+                }
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
+            }
+        }
+    });
+}, 2000);
+
+// Real-time update simulation
+setInterval(() => {
+    const lastUpdated = document.getElementById('last-updated');
+    if (lastUpdated) {
+        const now = new Date();
+        lastUpdated.textContent = now.toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+    }
+}, 1000);
+
+// Add intersection observer for animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in');
+        }
+    });
+}, observerOptions);
+
+// Observe all animated elements
+document.querySelectorAll('.slide-up, .bounce-in').forEach(el => {
+    observer.observe(el);
+});
+</script>
+{% endblock %}
