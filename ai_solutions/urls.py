@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+from django.views.generic import RedirectView
 urlpatterns = [
     path('admin/dashboard/', include(('admin_dashboard.urls', 'admin_dashboard'), namespace='admin_dashboard')),
     path('admin/', admin.site.urls),
@@ -28,6 +30,10 @@ urlpatterns = [
     path('news/', include(('news.urls', 'news'), namespace='news')),
     path('testimonials/', include(('testimonials.urls', 'testimonials'), namespace='testimonials')),
     path('contact/', include(('contact.urls', 'contact'), namespace='contact')),
+    # Authentication URLs
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='admin/login.html'), name='login'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('accounts/profile/', RedirectView.as_view(url='/'), name='profile'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

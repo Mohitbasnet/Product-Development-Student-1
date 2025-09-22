@@ -182,3 +182,8 @@ JAZZMIN_UI_TWEAKS = {
     }
 }
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Authentication settings
+LOGIN_REDIRECT_URL = '/admin/'  # Redirect to admin panel after login
+LOGOUT_REDIRECT_URL = '/'  # Redirect to home page after logout
+LOGIN_URL = '/admin/login/'  # Use admin login page
